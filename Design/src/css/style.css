@@ -1,0 +1,279 @@
+*
+{
+  max-height: 640px;
+  max-width: 540px;
+  margin: 0px;
+  padding: 0px;
+}
+
+:root
+{
+  --main-color: rgb(66, 66, 66);
+  --text-color-main: white;
+  --text-color-secondary: white;
+
+  --btn-color-main: grey;
+}
+
+#connStatus
+{
+  font-size: 24px;
+  margin-right: 1%;
+  margin-bottom: 1%;
+}
+
+.project-top
+{
+  color: var(--text-color-main);
+  background-color: var(--main-color);
+  height: 80px;
+}
+
+.project-body-container
+{
+  width: 540;
+  height: 480px;
+  background-color: white;
+}
+
+.project-body
+{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+footer
+{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-end;
+  background-color: var(--main-color);
+  height: 80px;
+}
+
+.connections-info
+{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 40%;
+  height: 100%;
+}
+
+.conn-label2
+{
+  font-size: small;
+  margin: 0;
+  width: 50%;
+  color: white;
+}
+
+.conn-label
+{
+  font-size: small;
+  text-align: right;
+  width: 40%;
+}
+
+.volume-controls-container
+{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 60%;
+  height: 100%;
+}
+
+.control-container
+{
+  text-align: center;
+  width: 30%;
+  height: 100%;
+}
+
+.vol-btn
+{
+  height: 90%;
+  width: 100%;
+  font-size: 24px;
+  background-color: rgb(160, 160, 160);
+}
+
+.vol-btn:active
+{
+  font-size: 18px;
+  background-color: black;
+  color: white;
+}
+
+#volLabel
+{
+  color: rgb(0, 255, 0);
+  font-size: 24px;
+  background-color: grey;
+  width: 100%;
+  height: 60%;
+}
+
+.centered
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.source-btn
+{
+  width: 300px;
+  height: 60px;
+}
+
+.grey-btn
+{
+  background-color: var(white);
+  color: var(black);
+  border: 2px solid black;
+  border-radius: 10px;
+  font-size: 36px;
+}
+
+.grey-btn:active
+{
+  font-size: 30px;
+}
+
+.grey-btn-active
+{
+  animation: pressed 1s forwards;
+  color: rgb(0, 0, 0);
+}
+
+.grey-btn-not-active
+{
+  animation: unPressed 1s forwards;
+  color: rgb(0, 0, 0);
+}
+
+.off-btn
+{
+  background-color: rgb(136, 0, 0);
+  color: var(--text-color-main);
+  font-size: 36px;
+}
+
+.off-btn:active
+{
+  font-size: 30px;
+}
+
+.off-btn-active
+{
+  animation: off-pressed 1s forwards;
+  animation-duration: 1s;
+  color: white;
+}
+
+.inner-subpage
+{
+  border-top: 6px solid var(--main-color);
+  border-bottom: 6px solid var(--main-color);
+  background-color: rgba(66, 66, 66, 0.6);
+  min-width: 100%;
+  height: 90%;
+}
+
+.room-name-container
+{
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-family: Arial, Helvetica, sans-serif;
+  flex-wrap: wrap;
+}
+
+.transitionIn
+{
+  animation: transition-in 0.5s forwards;
+}
+
+.transitionOut
+{
+  animation: transition-out 0.5s forwards;
+}
+
+@keyframes pressed
+{
+  from 
+  {
+    height: 60px;
+    background-color: white;
+    font-size: 30px;
+  }
+  to 
+  {
+    height: 100px;
+    background-color: rgb(131, 255, 131);
+    font-size: 36px;
+  }
+}
+
+@keyframes unPressed
+{
+  from 
+  {
+    background-color: rgb(131, 255, 131);
+    height: 100px;
+  }
+  to 
+  {
+    height: 60px;
+    background-color: white;
+  }
+}
+
+@keyframes off-pressed
+{
+  from 
+  {
+    background-color: rgb(136, 0, 0);
+    font-size: 30px;
+  }
+  to 
+  {
+    background-color: rgb(255, 0, 0);
+    font-size: 36px;
+  }
+}
+
+@keyframes transition-in
+{
+  from
+  {
+    width: 80%;
+  }
+  to
+  {
+    width: 100%;
+  }
+}
+
+@keyframes transition-out
+{
+  from
+  {
+    width: 100%;
+  }
+  to
+  {
+    width: 0%;
+  }
+}

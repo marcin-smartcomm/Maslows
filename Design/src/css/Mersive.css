@@ -1,0 +1,14 @@
+.mersive-text-container
+{
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.mersive-page-text
+{
+  width: 100%;
+  text-align: center;
+  color: var(--text-color-main);
+  font-size: 96px;
+}

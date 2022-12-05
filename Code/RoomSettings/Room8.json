@@ -1,0 +1,11 @@
+{
+  "roomName": "Meeting Room 2.15",
+  "sources": [
+    "Laptop",
+    "Mersive",
+    "IPTV"
+  ],
+  "sourceSelected": -1,
+  "neighbourRoom": 7,
+  "volume": 50
+}

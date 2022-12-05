@@ -1,0 +1,10 @@
+{
+  "roomName": "L1 Private Dining",
+  "sources": [
+    "Mersive",
+    "IPTV"
+  ],
+  "sourceSelected": -1,
+  "neighbourRoom": -1,
+  "volume": 50
+}
