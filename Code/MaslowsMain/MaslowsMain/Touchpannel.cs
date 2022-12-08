@@ -1,15 +1,17 @@
 ﻿using Crestron.SimplSharp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Timers;
 using WebsocketServer;
+using static Crestron.SimplSharpPro.DM.Streaming.Overlay.OverlayProperties;
 
 namespace MaslowsMain
 {
 
     public class Touchpannel
     {
-        int tpID;
+        byte tpID;
         Room currentRoom;
 
         public ControlSystem controlSystem;
@@ -28,7 +30,7 @@ namespace MaslowsMain
             {
                 controlSystem = cs;
 
-                tpID = port - 50000;
+                tpID = (byte)(port - 50000);
                 this.currentRoom = currentRoom;
                 SubscribeToRoomEvents();
 
@@ -134,12 +136,40 @@ namespace MaslowsMain
                 // Disconnected
                 _clientConnected = false;
                 currentRoom.DisconnectRoomEquipment(tpID);
+                if (tpID > 0)
+                {
+                    if(TPLocations.availableLocations.IndexOf(currentRoom.GetRoomName()) != -1)
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf(currentRoom.GetRoomName())] = true;
+
+                    if(currentRoom.GetRoomName().Equals("Meeting Room 4.16"))
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 4.17")] = true;
+
+                    if (currentRoom.GetRoomName().Equals("Meeting Room 3.18"))
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 3.17")] = true;
+
+                    if (currentRoom.GetRoomName().Equals("Meeting Room 2.15"))
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 2.16")] = true;
+                }
             }
             else
             {
                 // Connected
                 _clientConnected = true;
                 CommsServer.SetIndirectTextSignal(1, "\n-- CONNECTED --\n");
+                if(tpID > 0)
+                {
+                    if (TPLocations.availableLocations.IndexOf(currentRoom.GetRoomName()) != -1)
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf(currentRoom.GetRoomName())] = false;
+
+                    if (currentRoom.GetRoomName().Equals("Meeting Room 4.16"))
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 4.17")] = false;
+
+                    if (currentRoom.GetRoomName().Equals("Meeting Room 3.18"))
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 3.17")] = false;
+
+                    if (currentRoom.GetRoomName().Equals("Meeting Room 2.15"))
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 2.16")] = false;
+                }
 
                 if (_backlog.Count > 0)
                 {
@@ -150,6 +180,9 @@ namespace MaslowsMain
                 }
 
                 _backlog.Clear();
+
+                if (tpID == 0)
+                    SendAvailableLocations();
             }
         }
 
@@ -166,6 +199,30 @@ namespace MaslowsMain
             {
                 evaluateString(value.ToString());
             }
+        }
+
+        void SendAvailableLocations()
+        {
+            string toSend = "";
+
+            for(int i  = 0; i < TPLocations.availableLocations.Count(); i++)
+            {
+                if (TPLocations.availableLocationsIndex[i] == true)
+                {
+                    if (i == TPLocations.availableLocations.Count() - 1)
+                        toSend += TPLocations.availableLocations[i] + ":" + (i+1);
+                    else
+                    {
+                        if((i+1) == TPLocations.availableLocations.Count() - 1 && TPLocations.availableLocationsIndex[i+1] == false)
+                            toSend += TPLocations.availableLocations[i] + ":" + (i + 1);
+                        else
+                            toSend += TPLocations.availableLocations[i] + ":" + (i + 1) + "|";
+                    }
+                }
+            }
+
+            CommsServer.SetIndirectTextSignal(1, "AvailableLocations " + toSend);
+            controlSystem.logger.WriteLine(toSend);
         }
 
         void SendSources()

@@ -150,6 +150,7 @@
     <Compile Include="Room.cs" />
     <Compile Include="RoomSettings.cs" />
     <Compile Include="Touchpannel.cs" />
+    <Compile Include="TPLocations.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

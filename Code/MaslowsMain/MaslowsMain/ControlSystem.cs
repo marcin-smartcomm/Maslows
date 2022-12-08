@@ -17,6 +17,7 @@ namespace MaslowsMain
         public List<Room> rooms;
         public ConsoleLogger logger;
         public Touchpannel[] tp;
+        public Touchpannel tpDecider;
         public IPTV[] iptvs;
         public LGTV[] TVs;
 
@@ -106,26 +107,33 @@ namespace MaslowsMain
         }
         void InitializeTPs()
         {
-            const int TOUCHPANNEL_COUNT = 12;
             const ushort TOUCHPANNEL_START_PORT = 50000;
 
             masterIPad = new CrestronGo(0x10, this);
             masteriPadController = new MasterIpad(masterIPad, rooms, this, 1);
 
-            tp = new Touchpannel[TOUCHPANNEL_COUNT];
+            tpDecider = new Touchpannel(50000, rooms[0], this);
 
-            for (int i = 0; i < TOUCHPANNEL_COUNT; i++)
-                tp[i] = new Touchpannel(TOUCHPANNEL_START_PORT + i, rooms[i], this);
+            tp = new Touchpannel[8];
+            tp[0] = new Touchpannel(TOUCHPANNEL_START_PORT + 1, rooms[0], this);
+            tp[1] = new Touchpannel(TOUCHPANNEL_START_PORT + 2, rooms[1], this);
+            tp[2] = new Touchpannel(TOUCHPANNEL_START_PORT + 3, rooms[3], this);
+            tp[3] = new Touchpannel(TOUCHPANNEL_START_PORT + 4, rooms[5], this);
+            tp[4] = new Touchpannel(TOUCHPANNEL_START_PORT + 5, rooms[6], this);
+            tp[5] = new Touchpannel(TOUCHPANNEL_START_PORT + 6, rooms[8], this);
+            tp[6] = new Touchpannel(TOUCHPANNEL_START_PORT + 7, rooms[9], this);
+            tp[7] = new Touchpannel(TOUCHPANNEL_START_PORT + 8, rooms[10], this);
         }
 
         public override void InitializeSystem()
         {
             try
             {
-                for (int i = 0; i < tp.Length - 1; i++)
+                for (int i = 0; i < tp.Length; i++)
                 {
                     tp[i].Start();
                 }
+                tpDecider.Start();
                 logger.Start();
             }
             catch (Exception e)

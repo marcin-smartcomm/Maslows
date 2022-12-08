@@ -136,9 +136,10 @@ footer
 .grey-btn
 {
   background-color: var(white);
-  color: var(black);
-  border: 2px solid black;
-  border-radius: 10px;
+  color: black;
+  background-color: grey;
+  border-radius: 5px;
+  box-shadow: 5px 5px rgba(0,0,0,0.2);
   font-size: 36px;
 }
 
@@ -236,7 +237,7 @@ footer
   to 
   {
     height: 60px;
-    background-color: white;
+    background-color: grey;
   }
 }
 

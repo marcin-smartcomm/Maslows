@@ -88,4 +88,8 @@ function InitializeSubpageVariables(pageToInitialize)
   {
     InitializeIPTVVariables();
   }
+  if(pageToInitialize == "TPSelectionPage")
+  {
+    InitializeTPSelectionVariables();
+  }
 }

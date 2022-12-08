@@ -1,20 +1,64 @@
-let _webSocket = new WebSocket('ws://192.168.1.13:50000');
-//let _webSocket = new WebSocket('ws://10.10.23.134:50001');
+let _webSocket;
 
-_webSocket.onmessage = function(e) {
-    onMessage(e);
+const indexedDB = 
+    window.indexedDB ||
+    window.mozIndexedDB ||
+    window.webkitIndexedDB ||
+    window.msIndexedDB ||
+    window.shimIndexedDB;
+
+const addressDB = indexedDB.open("address", 2)
+
+addressDB.onerror = function (event) {
+    console.log("An error occured with IndexedDB")
 }
 
-_webSocket.onopen = function(e) {
-    ping();
-    setInterval(ping, 10000);
-    //connStatus('controlSystemStatus', 'green', 'Connected');
-    //const connMessage = document.getElementById("controlSystemStatus");
-    //connMessage.setAttribute("style", `color: green;`);
-    //connMessage.textContent = 'Connected';
-    socketConnected = true;
+addressDB.onupgradeneeded = function() {
+    const db = addressDB.result
+    const store = db.createObjectStore("address", { keyPath: "id"})
+    store.createIndex("addressURL", ["url"], { unique: false})
+}
 
-    RequestRoomData();
+addressDB.onsuccess = function() {
+    const db = addressDB.result
+    const transaction = db.transaction("address", "readwrite")
+
+    const store = transaction.objectStore("address")
+    const idQuery = store.get(1)
+
+    idQuery.onsuccess = function () {
+        if(idQuery.result == undefined)
+            _webSocket = new WebSocket("ws://192.168.1.243:50000")
+        else
+        {
+            _webSocket = new WebSocket(idQuery.result.url)
+        }
+            
+
+        _webSocket.onmessage = function(e) {
+            onMessage(e);
+        }
+        
+        _webSocket.onopen = function(e) {
+            ping();
+            setInterval(ping, 10000);
+            socketConnected = true;
+        
+            if(_webSocket.url != "ws://192.168.1.243:50000/")
+            {
+                RequestRoomData();
+                setTimeout(() => {
+                    openSubpage("ScreenSaver");
+                }, 100);
+            }
+        }
+
+        _webSocket.onerror = function(e)
+        {
+            console.log("error connecting");
+            location.reload();
+        }
+    }
 }
 
 function RequestRoomData()
@@ -30,12 +74,6 @@ function sendMessage(message)
 {
     _webSocket.send("STRING[1,"+message+"]");
     //console.log(message);
-}
-
-_webSocket.onerror = function(e)
-{
-    console.log("error connecting");
-    location.reload();
 }
 
 let socketConnected = false;
@@ -62,8 +100,12 @@ function connStatus(elementID, color, message)
     if(currentSubpage != "ScreenSaver")
     {
         const connMessage = document.getElementById(`${elementID}`);
-        connMessage.setAttribute("style", `color: ${color};`);
-        connMessage.textContent = message;
+
+        if(connMessage != null)
+        {
+            connMessage.setAttribute("style", `color: ${color};`);
+            connMessage.textContent = message;
+        }
     }
 }
 
@@ -153,6 +195,14 @@ function onMessage(e) {
 
         //in Home.js
         UpdateVolumeLevel(temp);
+    }
+
+    else if (value.includes("AvailableLocations"))
+    {
+        var availableLocations = value.replace('AvailableLocations ', '')
+        TPLocations = availableLocations.split('|')
+
+        openSubpage("TPSelectionPage")
     }
 }
  

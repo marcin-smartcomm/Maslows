@@ -1,5 +1,6 @@
 //Project Variables
 let currentRoomSelected = 0;
+let roomNametouchCount = 0;
 
 let touchstartX = 0
 let touchendX = 0
@@ -29,9 +30,32 @@ function FilRoomName(roomName)
 
 let inactivityTime = function() {
   let time;
-  document.addEventListener('touchstart', function()
+  document.addEventListener('touchstart', function(e)
   {
-    resetTimer();
+    if(_webSocket.url != "ws://192.168.1.243:50000/")
+    {
+      if(e.target.id == "roomNameContainer")
+        roomNametouchCount = roomNametouchCount + 1;
+      else
+        roomNametouchCount = 0;
+
+        console.log(roomNametouchCount)
+
+      if(roomNametouchCount == 10)
+      {
+        const db = addressDB.result
+        const transaction = db.transaction("address", "readwrite")
+        const store = transaction.objectStore("address")
+
+        store.put({ id: 1, url: "ws://192.168.1.243:50000"})
+
+        setTimeout(() => {
+          location.reload();
+      }, 1000);
+      }
+
+      resetTimer();
+    }
   });
   function logout() {
     openSubpage("ScreenSaver");
