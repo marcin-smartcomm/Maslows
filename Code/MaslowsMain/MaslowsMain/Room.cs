@@ -138,12 +138,10 @@ namespace MaslowsMain
 
         public void ConnectRoomEquipment(int tpID)
         {
-            iptv.ConnectRequest(tpID);
             lgtv.ConnectRequest(tpID);
         }
         public void DisconnectRoomEquipment(int tpID)
         {
-            iptv.Disconnect(tpID);
             lgtv.Disconnect(tpID);
         }
 

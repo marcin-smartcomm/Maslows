@@ -1,15 +1,16 @@
-﻿using Crestron.SimplSharpPro.EthernetCommunication;
-using System;
+﻿using System;
+using System.IO;
+using System.Net;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MaslowsMain
 {
     public class IPTV
     {
+        string _IPADDRESS, _PORT;
+
         public ControlSystem cs;
-        AsyncTCPClient comms;
 
         public string name;
 
@@ -20,113 +21,111 @@ namespace MaslowsMain
             cs = contsys;
 
             this.name = name;
-
-            comms = new AsyncTCPClient(contsys, ipAddr, port, 4000);
-            comms.MessageReceived += OnMessageReceived;
-            comms.ConnectedEvent += OnDeviceConnected;
+            _IPADDRESS = ipAddr;
+            _PORT = port.ToString();
         }
-
-        private void OnMessageReceived(object source, MessageReceivedEventArgs e)
-        {
-            string textToProcess = Encoding.ASCII.GetString(e.message);
-            cs.logger.WriteLine("Received From " + name + ": " + textToProcess);
-        }
-
-        void OnDeviceConnected(bool connStatus)
-        {
-            if (this.IPTVConnectedEvent != null)
-            {
-                this.IPTVConnectedEvent(connStatus);
-            }
-        }
-
-        public void Connect() => comms.Connect();
-        public void ConnectRequest(int tpID) => comms.ConnectRequest(tpID);
-        public void Disconnect(int tpID) => comms.Disconnect(tpID);
-        public bool GetConnectionStatus() => comms.GetConnectionStatus();
 
         public void PushButton(int btnPressed)
         {
+            string btnCodeToSend = "";
             switch (btnPressed)
             {
                 //Directional Pad
                 case 0:
-                    comms.SendMessage("Up\x0a");
+                    btnCodeToSend = "7";
                     break;
                 case 1:
-                    comms.SendMessage("Left\x0a");
+                    btnCodeToSend = "21";
                     break;
                 case 2:
-                    comms.SendMessage("Select\x0a");
+                    btnCodeToSend = "23";
                     break;
                 case 3:
-                    comms.SendMessage("Right\x0a");
+                    btnCodeToSend = "22";
                     break;
                 case 4:
-                    comms.SendMessage("Down\x0a");
+                    btnCodeToSend = "20";
                     break;
 
                 //Ch + -
                 case 5:
-                    comms.SendMessage("Ch+\x0a");
+                    btnCodeToSend = "166";
                     break;
                 case 6:
-                    comms.SendMessage("Ch-\x0a");
+                    btnCodeToSend = "167";
                     break;
 
                 //Function Btns
                 case 7:
-                    comms.SendMessage("Menu\x0a");
+                    btnCodeToSend = "82";
                     break;
                 case 8:
-                    comms.SendMessage("Guide\x0a");
+                    btnCodeToSend = "172";
                     break;
 
                 //Numpad
                 case 9:
-                    comms.SendMessage("1\x0a");
+                    btnCodeToSend = "8";
                     break;
                 case 10:
-                    comms.SendMessage("2\x0a");
+                    btnCodeToSend = "9";
                     break;
                 case 11:
-                    comms.SendMessage("3\x0a");
+                    btnCodeToSend = "10";
                     break;
                 case 12:
-                    comms.SendMessage("4\x0a");
+                    btnCodeToSend = "11";
                     break;
                 case 13:
-                    comms.SendMessage("5\x0a");
+                    btnCodeToSend = "12";
                     break;
                 case 14:
-                    comms.SendMessage("6\x0a");
+                    btnCodeToSend = "13";
                     break;
                 case 15:
-                    comms.SendMessage("7\x0a");
+                    btnCodeToSend = "14";
                     break;
                 case 16:
-                    comms.SendMessage("8\x0a");
+                    btnCodeToSend = "15";
                     break;
                 case 17:
-                    comms.SendMessage("9\x0a");
+                    btnCodeToSend = "16";
                     break;
                 case 18:
-                    comms.SendMessage("0\x0a");
+                    btnCodeToSend = "7";
                     break;
 
                 //Color Btns
                 case 19:
-                    comms.SendMessage("Red\x0a");
+                    btnCodeToSend = "183";
                     break;
                 case 20:
-                    comms.SendMessage("Green\x0a");
+                    btnCodeToSend = "184";
                     break;
                 case 21:
-                    comms.SendMessage("Yellow\x0a");
+                    btnCodeToSend = "185";
                     break;
                 case 22:
-                    comms.SendMessage("Blue\x0a");
+                    btnCodeToSend = "186";
                     break;
+            }
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://"+_IPADDRESS+":"+_PORT+"/api/action");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string json = "{\"type\":\"System.Action\",\"text\":\"PressKey\",\"value\":\"  " + btnCodeToSend + "  \"} ";
+
+                streamWriter.Write(json);
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                cs.logger.WriteLine(result);
             }
         }
     }
