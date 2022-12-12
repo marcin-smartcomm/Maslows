@@ -170,20 +170,14 @@ function onMessage(e) {
         RequestRoomData();
     }
     else if(value.includes("IPTV Connected"))
-    {
-        connStatus('iptvStatus', 'green', 'Connected');
-        iptvConnStatus = "Connected";
-    }
+    {}
     else if(value.includes("TV Connected"))
     {
         connStatus('tvStatus', 'green', 'Connected'); 
         tvConnStatus = "Connected";
     }
     else if(value.includes("IPTV Disconnected"))
-    {
-        connStatus('iptvStatus', 'red', 'Error');
-        iptvConnStatus = "Error";
-    }
+    {}
     else if(value.includes("TV Disconnected"))
     {
         connStatus('tvStatus', 'red', 'Error'); 
