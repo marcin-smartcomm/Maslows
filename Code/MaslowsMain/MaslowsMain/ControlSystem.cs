@@ -56,12 +56,12 @@ namespace MaslowsMain
                 iptvs = new IPTV[12];
                 TVs = new LGTV[12];
 
-                for (int i = 10; i < 22; i++)
+                for (int i = 210; i < 222; i++)
                 {
-                    iptvs[i - 10] = new IPTV(
+                    iptvs[i - 210] = new IPTV(
                         "192.168.1." + i.ToString(),
-                        20060,
-                        "iptv" + (i - 9).ToString(),
+                        7070,
+                        "iptv" + (i - 209).ToString(),
                         this
                         );
                 }

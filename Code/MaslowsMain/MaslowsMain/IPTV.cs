@@ -110,22 +110,25 @@ namespace MaslowsMain
                     break;
             }
 
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://"+_IPADDRESS+":"+_PORT+"/api/action");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://" + _IPADDRESS + ":" + _PORT + "/api/action");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-                string json = "{\"type\":\"System.Action\",\"text\":\"PressKey\",\"value\":\"  " + btnCodeToSend + "  \"} ";
+                string json = "{\"sender\": \"Web Application Client v2\",\"command\":{\"type\":\"System.Action\",\"text\":\"PressKey\",\"value\":\"" + btnCodeToSend + "\"}}";
 
                 streamWriter.Write(json);
+                cs.logger.WriteLine("IPTV IP: " + _IPADDRESS + ", IPTV Port: " + _PORT + ", Sending message: " + json.Replace("{", "(").Replace("}", ")"));
             }
 
             var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
                 var result = streamReader.ReadToEnd();
-                cs.logger.WriteLine(result);
+                result = result.Replace('{', '(');
+                result = result.Replace('}', ')');
+                cs.logger.WriteLine(result.ToString());
             }
         }
     }
