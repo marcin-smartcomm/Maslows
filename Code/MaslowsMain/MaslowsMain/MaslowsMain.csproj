@@ -151,6 +151,7 @@
     <Compile Include="RoomSettings.cs" />
     <Compile Include="Touchpannel.cs" />
     <Compile Include="TPLocations.cs" />
+    <Compile Include="WakeOnLAN.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

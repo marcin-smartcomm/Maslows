@@ -32,7 +32,12 @@ namespace MaslowsMain
             try
             {
                 _settings = FileOperations.loadJson(_roomID.ToString());
-                lgtv.volLevel = _settings.volume;
+                this.lgtv.volLevel = _settings.volume;
+
+                if(_settings.sourceSelected != -1)
+                    this.lgtv.currentSource = _settings.sources[_settings.sourceSelected];
+                else
+                    this.lgtv.currentSource = "Off";
             }
             catch (Exception ex)
             {
@@ -88,7 +93,7 @@ namespace MaslowsMain
             else
                 return 0;
         }
-        public void SetSourceSelected(short value)
+        public void SetSourceSelected(short value, int tpid)
         {
             try
             {
@@ -97,7 +102,7 @@ namespace MaslowsMain
                     _settings.sourceSelected = value;
                     FileOperations.UpdateSettings(_roomID.ToString(), _settings);
 
-                    OnSourceSelected();
+                    OnSourceSelected(tpid);
                 }
                 catch (Exception ex) { _cs.logger.WriteLine("Problem in Room.SetSourceSelected(): " + ex); }
             }
@@ -107,12 +112,12 @@ namespace MaslowsMain
             }
         }
 
-        public void OnSourceSelected()
+        public void OnSourceSelected(int tpID)
         {
             if (_settings.sourceSelected != -1)
-                lgtv.SourceSelectedChanged(_settings.sources[_settings.sourceSelected]);
+                lgtv.SourceSelectedChanged(_settings.sources[_settings.sourceSelected], tpID);
             else
-                lgtv.SourceSelectedChanged("Off");
+                lgtv.SourceSelectedChanged("Off", tpID);
 
             if (this.SourceSelectedEvent != null)
             {

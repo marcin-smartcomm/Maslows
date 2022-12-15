@@ -127,10 +127,10 @@ namespace MaslowsMain
                         }
                         if (args.Sig.Number == 30) if (args.Sig.BoolValue == true) _roomList[currentRoom].VolDown();
                         if (args.Sig.Number == 31) if (args.Sig.BoolValue == true) _roomList[currentRoom].VolUp();
-                        if (args.Sig.Number == 40) if (args.Sig.BoolValue == true) _roomList[currentRoom].SetSourceSelected(0);
-                        if (args.Sig.Number == 41) if (args.Sig.BoolValue == true) _roomList[currentRoom].SetSourceSelected(1);
-                        if (args.Sig.Number == 42) if (args.Sig.BoolValue == true) _roomList[currentRoom].SetSourceSelected(2);
-                        if (args.Sig.Number == 43) if (args.Sig.BoolValue == true) _roomList[currentRoom].SetSourceSelected(-1);
+                        if (args.Sig.Number == 40) if (args.Sig.BoolValue == true) _roomList[currentRoom].SetSourceSelected(0, _tpID);
+                        if (args.Sig.Number == 41) if (args.Sig.BoolValue == true) _roomList[currentRoom].SetSourceSelected(1, _tpID);
+                        if (args.Sig.Number == 42) if (args.Sig.BoolValue == true) _roomList[currentRoom].SetSourceSelected(2, _tpID);
+                        if (args.Sig.Number == 43) if (args.Sig.BoolValue == true) _roomList[currentRoom].SetSourceSelected(-1, _tpID);
 
                         CheckSourcePresses(args);
                             break;

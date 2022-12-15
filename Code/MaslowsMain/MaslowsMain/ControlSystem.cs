@@ -64,15 +64,18 @@ namespace MaslowsMain
                         );
                 }
 
-                for (int i = 80; i < 92; i++)
-                {
-                    TVs[i - 80] = new LGTV(
-                        this,
-                        "LGTV" + (i - 79).ToString(),
-                        "172.16.30." + i.ToString(),
-                        9761
-                        );
-                }
+                TVs[0] = new LGTV(this, "TV1", "172.16.30.80", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
+                TVs[1] = new LGTV(this, "TV2", "172.16.30.81", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
+                TVs[2] = new LGTV(this, "TV3", "172.16.30.82", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
+                TVs[3] = new LGTV(this, "TV4", "172.16.30.83", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
+                TVs[4] = new LGTV(this, "TV5", "172.16.30.84", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
+                TVs[5] = new LGTV(this, "TV6", "172.16.30.85", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
+                TVs[6] = new LGTV(this, "TV7", "172.16.30.86", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
+                TVs[7] = new LGTV(this, "TV8", "172.16.30.87", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
+                TVs[8] = new LGTV(this, "TV9", "172.16.30.88", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
+                TVs[9] = new LGTV(this, "TV10", "172.16.30.89", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
+                TVs[10] = new LGTV(this, "TV11", "172.16.30.90", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
+                TVs[11] = new LGTV(this, "TV12", "172.16.30.91", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
             }
             catch(Exception ex)
             {
@@ -82,7 +85,6 @@ namespace MaslowsMain
         void InitializeRooms()
         {
             rooms = new List<Room>();
-            string[] sources = { "IPTV", "Mersive", "Laptop"};
 
             try
             {

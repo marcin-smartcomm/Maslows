@@ -266,7 +266,7 @@ namespace MaslowsMain
                 else if (incomingRequest.Contains("GetSourceSelected")) SendSourceSelected();
                 else if (incomingRequest.Contains("GetNeighbourRoom")) SendNeihbourRoom();
                 else if (incomingRequest.Contains("GetVolumeLevel")) CommsServer.SetIndirectTextSignal(1, "Volume " + currentRoom.GetRoomVolLevel());
-                else if (incomingRequest.Contains("SetSourceSelected")) currentRoom.SetSourceSelected(short.Parse(incomingRequest.Split(':')[1]));
+                else if (incomingRequest.Contains("SetSourceSelected")) currentRoom.SetSourceSelected(short.Parse(incomingRequest.Split(':')[1]), tpID);
                 else if (incomingRequest.Contains("RoomChange"))
                 {
                     UnsubscribeFromRoomEvents();
@@ -277,7 +277,7 @@ namespace MaslowsMain
                 }
                 else if (incomingRequest.Contains("RoomOff"))
                 {
-                    currentRoom.SetSourceSelected(-1);
+                    currentRoom.SetSourceSelected(-1, tpID);
                     CommsServer.SetIndirectTextSignal(1, "SourceSelected " + currentRoom.GetSourceSelected());
                 }
                 else if (incomingRequest.Contains("SourceBtn"))

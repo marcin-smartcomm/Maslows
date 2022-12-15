@@ -8,11 +8,14 @@ namespace MaslowsMain
 {
     public class LGTV
     {
-        ControlSystem cs;
-        AsyncTCPClient comms;
-        string IPADDRESS;
-        int PORT;
+        ControlSystem _cs;
+        AsyncTCPClient _comms;
+        string _IPADDRESS;
+        int _PORT;
+        byte[] _MACADDRESS;
+        WakeOnLAN _wakeOnLAN;
 
+        public string currentSource;
         public int volLevel;
 
         public string TVName;
@@ -20,112 +23,79 @@ namespace MaslowsMain
         public event Action<bool> TVConnectedEvent;
         public event Action<int> VolChangeEvent;
 
-        public LGTV(ControlSystem cs, string name, string ipAddr, int port)
+        public LGTV(ControlSystem cs, string name, string ipAddr, int port, byte[] macAddr)
         {
-            this.cs = cs;
+            this._cs = cs;
 
             this.TVName = name;
-            IPADDRESS = ipAddr;
-            PORT = port;
+            _IPADDRESS = ipAddr;
+            _PORT = port;
+            _MACADDRESS = macAddr;
 
-            comms = new AsyncTCPClient(cs, ipAddr, port, 4000);
-            comms.MessageReceived += OnMessageReceived;
-            comms.ConnectedEvent += OnDeviceConnected;
+            _wakeOnLAN = new WakeOnLAN(6, ipAddr, _MACADDRESS);
+
+            _comms = new AsyncTCPClient(cs, ipAddr, port, 4000);
+            _comms.MessageReceived += OnMessageReceived;
+            _comms.ConnectedEvent += OnDeviceConnected;
         }
+        public void ConnectRequest(int tpID)
+        {
+            if (currentSource != "Off")
+                _comms.ConnectRequest(tpID);
+        }
+        public void Disconnect(int tpID) => _comms.Disconnect(tpID);
+        public bool GetConnectionStatus() => _comms.GetConnectionStatus();
 
-        public void Connect() => comms.Connect();
-        public void ConnectRequest(int tpID) => comms.ConnectRequest(tpID);
-        public void Disconnect(int tpID) => comms.Disconnect(tpID);
-        public bool GetConnectionStatus() => comms.GetConnectionStatus();
 
-        private void OnMessageReceived(object source, MessageReceivedEventArgs e)
+        void OnMessageReceived(object source, MessageReceivedEventArgs e)
         {
             string textToProcess = Encoding.ASCII.GetString(e.message);
-            cs.logger.WriteLine("Received From " + TVName + ": " + textToProcess);
+            _cs.logger.WriteLine("Received From " + TVName + ": " + textToProcess);
             evaluateResponse(textToProcess);
         }
-
-        static void Delay(int milisecondsDelay)
-        {
-            Thread.Sleep(milisecondsDelay);
-            return;
-        }
-
-        void evaluateResponse(string textToProcess)
-        {
-            if(textToProcess.Contains("f ") && textToProcess.Contains("OK"))
-            {
-                string volStr = textToProcess.Remove(0, 7);
-                volStr = volStr.Remove(2, 1);
-                cs.logger.WriteLine(volStr);
-
-                volLevel = int.Parse(volStr, System.Globalization.NumberStyles.HexNumber);
-
-                OnVolumeChange(volLevel);
-            }
-        }
-
         void OnDeviceConnected(bool connStatus)
         {
             if (this.TVConnectedEvent != null)
-            {
                 this.TVConnectedEvent(connStatus);
-            }
         }
-
         void OnVolumeChange(int volLevel)
         {
             if (this.VolChangeEvent != null)
-            {
                 this.VolChangeEvent(volLevel);
-            }
         }
 
         public int GetVolumeLevel() => volLevel;
-
-        public void PowerOn()
-        {
-            comms.SendMessage("ka 00 01\r");
-        }
-
-        public void PowerOff()
-        {
-            comms.SendMessage("ka 00 00\r");
-        }
-
+        public void PowerOn() => _wakeOnLAN.SendWakeOnLANMessage();
+        public void PowerOff() => _comms.SendMessage("ka 00 00\r");
         public void VolUp()
         {
             if(volLevel >= 95)
-            {
-                comms.SendMessage("kf 00 64\r");
-            }
+                _comms.SendMessage("kf 00 64\r");
             else
             {
                 int newVolume = volLevel + 5;
                 string newVolumeHex = newVolume.ToString("X2");
-                comms.SendMessage("kf 00 " + newVolumeHex + "\r");
+                _comms.SendMessage("kf 00 " + newVolumeHex + "\r");
             }
         }
         public void VolDown()
         {
             if (volLevel <= 5)
-            {
-                comms.SendMessage("kf 00 00\r");
-            }
+                _comms.SendMessage("kf 00 00\r");
             else
             {
                 int newVolume = volLevel - 5;
                 string newVolumeHex = newVolume.ToString("X2");
-                comms.SendMessage("kf 00 " + newVolumeHex + "\r");
+                _comms.SendMessage("kf 00 " + newVolumeHex + "\r");
             }
         }
 
-        public int HDMISelect(int hdmiInput)
+        int HDMISelect(int hdmiInput)
         {
-            comms.SendMessage("xb 00 9" + (hdmiInput-1) + "\r");
+            if(_comms.GetConnectionStatus())
+                _comms.SendMessage("xb 00 9" + (hdmiInput-1) + "\r");
             return 1;
         }
-
         static int Delay(int toReturnAfterDelay, int milisecondDelay)
         {
             Thread.Sleep(milisecondDelay);
@@ -133,19 +103,38 @@ namespace MaslowsMain
             return toReturnAfterDelay;
         }
 
-        public void SourceSelectedChanged(string source)
+        static void Delay(int milisecondDelay)
+        {
+            Thread.Sleep(milisecondDelay);
+        }
+
+        public void SourceSelectedChanged(string source, int tpID)
         {
             if (source.Equals("Off"))
+            {
                 PowerOff();
+                currentSource = source;
+            }
             else
                 PowerOn();
+
+            if (currentSource.Equals("Off") && !source.Equals("Off"))
+            {
+                currentSource = source;
+
+                Task.Run(() =>
+                {
+                    Delay(7000);
+                    _comms.ConnectRequest(tpID);
+                });
+            }
 
             if(source.Equals("IPTV"))
             {
                 HDMISelect(1);
                 Task.Run(() =>
                 {
-                   HDMISelect(Delay(1, 3000));
+                   HDMISelect(Delay(1, 8000));
                 });
             }
             else if (source.Equals("Mersive"))
@@ -153,7 +142,7 @@ namespace MaslowsMain
                 HDMISelect(2);
                 Task.Run(()=>
                 {
-                    HDMISelect(Delay(2, 3000));
+                    HDMISelect(Delay(2, 8000));
                 });
             }
             else if (source.Equals("Laptop"))
@@ -161,8 +150,22 @@ namespace MaslowsMain
                 HDMISelect(3);
                 Task.Run(() =>
                 {
-                    HDMISelect(Delay(3, 3000));
+                    HDMISelect(Delay(3, 8000));
                 });
+            }
+        }
+
+        void evaluateResponse(string textToProcess)
+        {
+            if (textToProcess.Contains("f ") && textToProcess.Contains("OK"))
+            {
+                string volStr = textToProcess.Remove(0, 7);
+                volStr = volStr.Remove(2, 1);
+                _cs.logger.WriteLine(volStr);
+
+                volLevel = int.Parse(volStr, System.Globalization.NumberStyles.HexNumber);
+
+                OnVolumeChange(volLevel);
             }
         }
     }
