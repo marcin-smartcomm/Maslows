@@ -32,7 +32,7 @@ let inactivityTime = function() {
   let time;
   document.addEventListener('touchstart', function(e)
   {
-    if(_webSocket.url != "ws://192.168.1.243:50000/")
+    if(_webSocket.url != "ws://172.16.30.101:50000/")
     {
       if(e.target.id == "roomNameContainer")
         roomNametouchCount = roomNametouchCount + 1;
@@ -47,7 +47,7 @@ let inactivityTime = function() {
         const transaction = db.transaction("address", "readwrite")
         const store = transaction.objectStore("address")
 
-        store.put({ id: 1, url: "ws://192.168.1.243:50000"})
+        store.put({ id: 1, url: "ws://172.16.30.101:50000"})
 
         setTimeout(() => {
           location.reload();

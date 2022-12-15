@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.IO;
 
 namespace MaslowsMain
@@ -8,7 +7,7 @@ namespace MaslowsMain
     {
         public static RoomSettings loadJson(string roomNum)
         {
-            StreamReader sr = new StreamReader("../Nvram/Room" + roomNum +  ".json");
+            StreamReader sr = new StreamReader("../nvram/Room" + roomNum +  ".json");
 
             string json = sr.ReadToEnd();
             sr.Close();
@@ -18,9 +17,9 @@ namespace MaslowsMain
 
         public static void UpdateSettings(string roomNum, RoomSettings rs)
         {
-            File.Delete("../Nvram/Room" + roomNum + ".json");
+            File.Delete("../nvram/Room" + roomNum + ".json");
             File.WriteAllText(
-                "../Nvram/Room" + roomNum + ".json",
+                "../nvram/Room" + roomNum + ".json",
                 JsonConvert.SerializeObject(rs, Formatting.Indented));
         }
     }

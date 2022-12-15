@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using Crestron.SimplSharp;                          	// For Basic SIMPL# Classes
 using Crestron.SimplSharpPro;                       	// For Basic SIMPL#Pro classes
-using Crestron.SimplSharpPro.CrestronThread;            // For Threading
-using Crestron.SimplSharpPro.DeviceSupport;
+using Crestron.SimplSharpPro.CrestronThread;            // For Threadingb
 using Crestron.SimplSharpPro.UI;
-using Crestron.SimplSharpPro.EthernetCommunication;
 
 namespace MaslowsMain
 {
@@ -56,22 +54,22 @@ namespace MaslowsMain
                 iptvs = new IPTV[12];
                 TVs = new LGTV[12];
 
-                for (int i = 210; i < 222; i++)
+                for (int i = 60; i < 72; i++)
                 {
-                    iptvs[i - 210] = new IPTV(
-                        "192.168.1." + i.ToString(),
+                    iptvs[i - 60] = new IPTV(
+                        "172.16.30." + i.ToString(),
                         7070,
-                        "iptv" + (i - 209).ToString(),
+                        "iptv" + (i - 59).ToString(),
                         this
                         );
                 }
 
-                for (int i = 10; i < 22; i++)
+                for (int i = 80; i < 92; i++)
                 {
-                    TVs[i - 10] = new LGTV(
+                    TVs[i - 80] = new LGTV(
                         this,
-                        "LGTV" + (i - 9).ToString(),
-                        "192.168.1." + i.ToString(),
+                        "LGTV" + (i - 79).ToString(),
+                        "172.16.30." + i.ToString(),
                         9761
                         );
                 }

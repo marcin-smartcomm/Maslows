@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Text;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace MaslowsMain
 {

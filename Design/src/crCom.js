@@ -28,7 +28,7 @@ addressDB.onsuccess = function() {
 
     idQuery.onsuccess = function () {
         if(idQuery.result == undefined)
-            _webSocket = new WebSocket("ws://192.168.1.243:50000")
+            _webSocket = new WebSocket("ws://172.16.30.101:50000")
         else
         {
             _webSocket = new WebSocket(idQuery.result.url)
@@ -44,7 +44,7 @@ addressDB.onsuccess = function() {
             setInterval(ping, 10000);
             socketConnected = true;
         
-            if(_webSocket.url != "ws://192.168.1.243:50000/")
+            if(_webSocket.url != "ws://172.16.30.101:50000/")
             {
                 RequestRoomData();
                 setTimeout(() => {
