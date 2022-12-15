@@ -5,6 +5,8 @@ let roomNametouchCount = 0;
 let touchstartX = 0
 let touchendX = 0
 
+let frieAlarmState = false;
+
 document.onload = openSubpage("ScreenSaver");
 
 document.getElementById("projectTop").addEventListener('touchstart', e => {
@@ -32,14 +34,12 @@ let inactivityTime = function() {
   let time;
   document.addEventListener('touchstart', function(e)
   {
-    if(_webSocket.url != "ws://172.16.30.101:50000/")
+    if(_webSocket.url != "ws://" + webSocketServerIPAddress + ":50000/")
     {
       if(e.target.id == "roomNameContainer")
         roomNametouchCount = roomNametouchCount + 1;
       else
         roomNametouchCount = 0;
-
-        console.log(roomNametouchCount)
 
       if(roomNametouchCount == 10)
       {
@@ -47,7 +47,7 @@ let inactivityTime = function() {
         const transaction = db.transaction("address", "readwrite")
         const store = transaction.objectStore("address")
 
-        store.put({ id: 1, url: "ws://172.16.30.101:50000"})
+        store.put({ id: 1, url: "ws://" + webSocketServerIPAddress + ":50000"})
 
         setTimeout(() => {
           location.reload();
@@ -58,8 +58,11 @@ let inactivityTime = function() {
     }
   });
   function logout() {
-    openSubpage("ScreenSaver");
-    sendMessage("DisconnectEquipment");
+    if(!frieAlarmState)
+    {
+      openSubpage("ScreenSaver");
+      sendMessage("DisconnectEquipment");
+    }
   }
   function resetTimer() {
     clearTimeout(time);

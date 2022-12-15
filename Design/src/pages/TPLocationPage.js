@@ -21,7 +21,7 @@ function InitializeTPSelectionVariables()
             const transaction = db.transaction("address", "readwrite")
             const store = transaction.objectStore("address")
 
-            store.put({ id: 1, url: "ws://172.16.30.101:" + (50000 + parseInt(newBtn.id))})
+            store.put({ id: 1, url: "ws://" + webSocketServerIPAddress + ":" + (50000 + parseInt(newBtn.id))})
 
             setTimeout(() => {
                 location.reload();

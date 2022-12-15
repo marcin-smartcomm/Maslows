@@ -1,4 +1,6 @@
 let _webSocket;
+//let webSocketServerIPAddress = "172.16.30.101"
+let webSocketServerIPAddress = "192.168.1.243"
 
 const indexedDB = 
     window.indexedDB ||
@@ -28,7 +30,8 @@ addressDB.onsuccess = function() {
 
     idQuery.onsuccess = function () {
         if(idQuery.result == undefined)
-            _webSocket = new WebSocket("ws://172.16.30.101:50000")
+            //_webSocket = new WebSocket("ws://172.16.30.101:50000")
+            _webSocket = new WebSocket("ws://" + webSocketServerIPAddress + ":50000")
         else
         {
             _webSocket = new WebSocket(idQuery.result.url)
@@ -44,7 +47,7 @@ addressDB.onsuccess = function() {
             setInterval(ping, 10000);
             socketConnected = true;
         
-            if(_webSocket.url != "ws://172.16.30.101:50000/")
+            if(_webSocket.url != "ws://" + webSocketServerIPAddress + ":50000/")
             {
                 RequestRoomData();
                 setTimeout(() => {
@@ -117,6 +120,7 @@ function pong() {
 }
 
 let neighbourRoom = "";
+let interval;
 
 function onMessage(e) {
   const msg = e.data;
@@ -198,6 +202,35 @@ function onMessage(e) {
 
         openSubpage("TPSelectionPage")
     }
+
+    else if (value.includes("FireAlarm"))
+    {
+        if(value.includes("True"))
+        {
+            openSubpage("FireAlarm")
+
+            //in app.js
+            frieAlarmState = true;
+            interval = setInterval(simulateTouch, 1000)
+            audio.play()
+        }
+        if(value.includes("False"))
+        {
+            openSubpage("ScreenSaver")
+
+            //in app.js
+            frieAlarmState = false;
+            clearInterval(interval)
+            audio.pause()
+        }
+    }
+}
+
+var audio = new Audio('./audio/fireAlarm.mp3')
+function simulateTouch()
+{
+    audio.play()
+    document.getElementById("fireAlarmSection").click();
 }
  
 function getBoundString_EndLastIndex(msg, startChar, stopChar)

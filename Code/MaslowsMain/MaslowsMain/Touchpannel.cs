@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 using WebsocketServer;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MaslowsMain
 {
@@ -127,6 +128,7 @@ namespace MaslowsMain
                 _backlog.Add(text);
             }
         }
+        public void OnFireAlarmStateChange(bool state) => CommsServer.SetIndirectTextSignal(1, "FireAlarm " + state.ToString());
 
         private void OnClientConnected(ushort state)
         {

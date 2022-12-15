@@ -7,13 +7,17 @@ namespace MaslowsMain
 {
     public class ConsoleLogger
     {
+        ControlSystem _cs;
+
         private WebsocketSrvr _server;
         private bool _clientConnected;
 
         private List<string> _backlog;
 
-        public ConsoleLogger(int port)
+        public ConsoleLogger(int port, ControlSystem cs)
         {
+            _cs = cs;
+
             try
             {
                 _server = new WebsocketSrvr();
@@ -86,6 +90,15 @@ namespace MaslowsMain
             if (value.ToString() == "__ping__")
             {
                 _server.SetIndirectTextSignal(1, "__pong__");
+            }
+            if (value.ToString().Contains("FireAlarm"))
+            {
+                if (value.ToString().Split(':')[1].Equals("true"))
+                    _cs.FireAlarmState(true);
+                else if (value.ToString().Split(':')[1].Equals("false"))
+                    _cs.FireAlarmState(false);
+                else
+                    _server.SetIndirectTextSignal(1, "Invalid Command");
             }
         }
     }

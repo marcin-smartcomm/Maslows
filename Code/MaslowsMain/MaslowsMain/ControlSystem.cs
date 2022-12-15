@@ -9,9 +9,12 @@ namespace MaslowsMain
 {
     public class ControlSystem : CrestronControlSystem
     {
+        //Hardware
+        Relay fireAlarmRelay;
+
         MasterIpad masteriPadController;
         CrestronGo masterIPad;
-
+        
         public List<Room> rooms;
         public ConsoleLogger logger;
         public Touchpannel[] tp;
@@ -34,17 +37,33 @@ namespace MaslowsMain
 
                 if (this.SupportsEthernet)
                 {
-                    logger = new ConsoleLogger(55555);
+                    logger = new ConsoleLogger(55555, this);
 
                     InitializeEquipment();
                     InitializeRooms();
                     InitializeTPs();
+                }
+                if (this.SupportsRelay)
+                {
+                    fireAlarmRelay = this.RelayPorts[1];
+                    fireAlarmRelay.StateChange += FireAlarmRelay_StateChange;
                 }
             }
             catch (Exception e)
             {
                 ErrorLog.Error("Error in the constructor: {0}", e.Message);
             }
+        }
+
+        private void FireAlarmRelay_StateChange(Relay relay, RelayEventArgs args)
+        {
+            for (int i = 0; i < tp.Length; i++)
+                tp[i].OnFireAlarmStateChange(args.State);
+        }
+        public void FireAlarmState(bool state)
+        {
+            for (int i = 0; i < tp.Length; i++)
+                tp[i].OnFireAlarmStateChange(state);
         }
 
         void InitializeEquipment()
