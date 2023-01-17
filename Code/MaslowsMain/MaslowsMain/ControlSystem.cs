@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using Crestron.SimplSharp;                          	// For Basic SIMPL# Classes
 using Crestron.SimplSharpPro;                       	// For Basic SIMPL#Pro classes
 using Crestron.SimplSharpPro.CrestronThread;            // For Threadingb
@@ -63,7 +65,36 @@ namespace MaslowsMain
         public void FireAlarmState(bool state)
         {
             for (int i = 0; i < tp.Length; i++)
-                tp[i].OnFireAlarmStateChange(state);
+                tp[i].OnFireAlarmStateChange(state); 
+
+
+            for (int i = 0; i < 10; i++) //num of amps
+            {
+                for (int j = 1; j < 5; j++) //num of channels per amp
+                {
+                    var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://10.0.1." + (20 + i) + "/rest-api/settings/channel/" + j + "/dsp/mute");
+                    httpWebRequest.Accept = "*/*";
+                    httpWebRequest.ContentType = "application/json";
+                    httpWebRequest.Method = "PUT";
+
+                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                    {
+                        string json = "{\"value\": " + state.ToString().ToLower() + "}";
+
+                        streamWriter.Write(json);
+                        logger.WriteLine("KArray Amp IP: " + "http://10.0.1." + (20 + i) + ",Sending message: " + json.Replace("{", "(").Replace("}", ")"));
+                    }
+
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        result = result.Replace('{', '(');
+                        result = result.Replace('}', ')');
+                        logger.WriteLine(result.ToString());
+                    }
+                }
+            }
         }
 
         void InitializeEquipment()
