@@ -38,7 +38,6 @@ namespace MaslowsMain
 
         void SubscribeToRoomEvents()
         {
-            _roomList[currentRoom].RoomIPTVConnectedEvent += MasterIpad_RoomIPTVConnectedEvent;
             _roomList[currentRoom].RoomTVConnectedEvent += MasterIpad_RoomTVConnectedEvent;
             _roomList[currentRoom].RoomVolChangedEvent += MasterIpad_RoomVolChangedEvent;
             _roomList[currentRoom].SourceSelectedEvent += MasterIpad_SourceSelectedEvent;
@@ -46,7 +45,6 @@ namespace MaslowsMain
 
         void UnsubscribeRoomEvents()
         {
-            _roomList[currentRoom].RoomIPTVConnectedEvent -= MasterIpad_RoomIPTVConnectedEvent;
             _roomList[currentRoom].RoomTVConnectedEvent -= MasterIpad_RoomTVConnectedEvent;
             _roomList[currentRoom].RoomVolChangedEvent -= MasterIpad_RoomVolChangedEvent;
             _roomList[currentRoom].SourceSelectedEvent -= MasterIpad_SourceSelectedEvent;

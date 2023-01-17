@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 using WebsocketServer;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace MaslowsMain
 {
@@ -54,152 +53,29 @@ namespace MaslowsMain
             }
         }
 
-        private void OnTimedEvent(object source, ElapsedEventArgs e)
-        {
-            if (!isPinging)
-            {
-                Stop();
-                Start();
-            }
-            isPinging = false;
-        }
-
-        void OnSourceSelected(short newSource)
-        {
-            SendSourceSelected();
-        }
-
         void SubscribeToRoomEvents()
         {
             currentRoom.SourceSelectedEvent += OnSourceSelected;
             currentRoom.RoomTVConnectedEvent += CurrentRoom_RoomTVConnectedEvent;
-            currentRoom.RoomIPTVConnectedEvent += CurrentRoom_RoomIPTVConnectedEvent;
             currentRoom.RoomVolChangedEvent += CurrentRoom_RoomVolChangedEvent;
         }
+        void UnsubscribeFromRoomEvents()
+        {
+            currentRoom.SourceSelectedEvent -= OnSourceSelected;
+            currentRoom.RoomTVConnectedEvent -= CurrentRoom_RoomTVConnectedEvent;
+            currentRoom.RoomVolChangedEvent -= CurrentRoom_RoomVolChangedEvent;
+        }
 
-        private void CurrentRoom_RoomVolChangedEvent(int volLevel)
+        void CurrentRoom_RoomVolChangedEvent(int volLevel)
         {
             CommsServer.SetIndirectTextSignal(1, "Volume " + volLevel);
         }
-
-        private void CurrentRoom_RoomIPTVConnectedEvent(bool connected)
-        {
-            if(connected)
-                CommsServer.SetIndirectTextSignal(1, "IPTV Connected");
-            else
-                CommsServer.SetIndirectTextSignal(1, "IPTV Disconnected");
-        }
-
-        private void CurrentRoom_RoomTVConnectedEvent(bool connected)
+        void CurrentRoom_RoomTVConnectedEvent(bool connected)
         {
             if (connected)
                 CommsServer.SetIndirectTextSignal(1, "TV Connected");
             else
                 CommsServer.SetIndirectTextSignal(1, "TV Disconnected");
-        }
-
-        void UnsubscribeFromRoomEvents()
-        {
-            currentRoom.SourceSelectedEvent -= OnSourceSelected;
-            currentRoom.RoomTVConnectedEvent -= CurrentRoom_RoomTVConnectedEvent;
-            currentRoom.RoomIPTVConnectedEvent -= CurrentRoom_RoomIPTVConnectedEvent;
-            currentRoom.RoomVolChangedEvent -= CurrentRoom_RoomVolChangedEvent;
-        }
-        public void Start()
-        {
-            CommsServer.StartServer();
-        }
-
-        public void Stop()
-        {
-            CommsServer.StopServer();
-        }
-
-        public void WriteLine(string msg, params object[] args)
-        {
-            var text = String.Format(msg, args) + "\n";
-
-            if (_clientConnected)
-            {
-                CommsServer.SetIndirectTextSignal(1, text);
-            }
-            else
-            {
-                _backlog.Add(text);
-            }
-        }
-        public void OnFireAlarmStateChange(bool state) => CommsServer.SetIndirectTextSignal(1, "FireAlarm " + state.ToString());
-
-        private void OnClientConnected(ushort state)
-        {
-            if (state == 0)
-            {
-                // Disconnected
-                _clientConnected = false;
-                currentRoom.DisconnectRoomEquipment(tpID);
-                if (tpID > 0)
-                {
-                    if(TPLocations.availableLocations.IndexOf(currentRoom.GetRoomName()) != -1)
-                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf(currentRoom.GetRoomName())] = true;
-
-                    if(currentRoom.GetRoomName().Equals("Meeting Room 4.16"))
-                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 4.17")] = true;
-
-                    if (currentRoom.GetRoomName().Equals("Meeting Room 3.18"))
-                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 3.17")] = true;
-
-                    if (currentRoom.GetRoomName().Equals("Meeting Room 2.15"))
-                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 2.16")] = true;
-                }
-            }
-            else
-            {
-                // Connected
-                _clientConnected = true;
-                CommsServer.SetIndirectTextSignal(1, "\n-- CONNECTED --\n");
-                if(tpID > 0)
-                {
-                    if (TPLocations.availableLocations.IndexOf(currentRoom.GetRoomName()) != -1)
-                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf(currentRoom.GetRoomName())] = false;
-
-                    if (currentRoom.GetRoomName().Equals("Meeting Room 4.16"))
-                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 4.17")] = false;
-
-                    if (currentRoom.GetRoomName().Equals("Meeting Room 3.18"))
-                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 3.17")] = false;
-
-                    if (currentRoom.GetRoomName().Equals("Meeting Room 2.15"))
-                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 2.16")] = false;
-                }
-
-                if (_backlog.Count > 0)
-                {
-                    foreach (var msg in _backlog)
-                    {
-                        CommsServer.SetIndirectTextSignal(1, msg);
-                    }
-                }
-
-                _backlog.Clear();
-
-                if (tpID == 0)
-                    SendAvailableLocations();
-            }
-        }
-
-        private void OnReceivingMessage(ushort state, SimplSharpString value)
-        {
-            controlSystem.logger.WriteLine(value.ToString());
-            if (value.ToString() == "__ping__")
-            {
-                isPinging = true;
-                // _logger.WriteLine("panel is pinging server, isPinging = "+isPinging.ToString());
-                CommsServer.SetIndirectTextSignal(1, "__pong__");
-            }
-            else
-            {
-                evaluateString(value.ToString());
-            }
         }
 
         void SendAvailableLocations()
@@ -225,7 +101,6 @@ namespace MaslowsMain
             CommsServer.SetIndirectTextSignal(1, "AvailableLocations " + toSend);
             controlSystem.logger.WriteLine(toSend);
         }
-
         void SendSources()
         {
             string[] roomSources = currentRoom.GetSources();
@@ -259,6 +134,90 @@ namespace MaslowsMain
             CommsServer.SetIndirectTextSignal(1, "NeighbourRoom " + currentRoom.GetNeighbourRoom());
         }
 
+        void OnClientConnected(ushort state)
+        {
+            if (state == 0)
+            {
+                // Disconnected
+                _clientConnected = false;
+                currentRoom.DisconnectRoomEquipment(tpID);
+                if (tpID > 0)
+                {
+                    if (TPLocations.availableLocations.IndexOf(currentRoom.GetRoomName()) != -1)
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf(currentRoom.GetRoomName())] = true;
+
+                    if (currentRoom.GetRoomName().Equals("Meeting Room 4.16"))
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 4.17")] = true;
+
+                    if (currentRoom.GetRoomName().Equals("Meeting Room 3.18"))
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 3.17")] = true;
+
+                    if (currentRoom.GetRoomName().Equals("Meeting Room 2.15"))
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 2.16")] = true;
+                }
+            }
+            else
+            {
+                // Connected
+                _clientConnected = true;
+                CommsServer.SetIndirectTextSignal(1, "\n-- CONNECTED --\n");
+                if (tpID > 0)
+                {
+                    if (TPLocations.availableLocations.IndexOf(currentRoom.GetRoomName()) != -1)
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf(currentRoom.GetRoomName())] = false;
+
+                    if (currentRoom.GetRoomName().Equals("Meeting Room 4.16"))
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 4.17")] = false;
+
+                    if (currentRoom.GetRoomName().Equals("Meeting Room 3.18"))
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 3.17")] = false;
+
+                    if (currentRoom.GetRoomName().Equals("Meeting Room 2.15"))
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 2.16")] = false;
+                }
+
+                if (_backlog.Count > 0)
+                {
+                    foreach (var msg in _backlog)
+                    {
+                        CommsServer.SetIndirectTextSignal(1, msg);
+                    }
+                }
+
+                _backlog.Clear();
+
+                if (tpID == 0)
+                    SendAvailableLocations();
+            }
+        }
+        void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            if (!isPinging)
+            {
+                Stop();
+                Start();
+            }
+            isPinging = false;
+        }
+        void OnSourceSelected(short newSource)
+        {
+            SendSourceSelected();
+        }
+        void OnReceivingMessage(ushort state, SimplSharpString value)
+        {
+            controlSystem.logger.WriteLine(value.ToString());
+            if (value.ToString() == "__ping__")
+            {
+                isPinging = true;
+                // _logger.WriteLine("panel is pinging server, isPinging = "+isPinging.ToString());
+                CommsServer.SetIndirectTextSignal(1, "__pong__");
+            }
+            else
+            {
+                evaluateString(value.ToString());
+            }
+        }
+
         void evaluateString(string incomingRequest)
         {
             try
@@ -289,7 +248,7 @@ namespace MaslowsMain
                 }
                 else if (incomingRequest.Contains("ConnectEquipment")) currentRoom.ConnectRoomEquipment(tpID);
                 else if (incomingRequest.Contains("DisconnectEquipment")) currentRoom.DisconnectRoomEquipment(tpID);
-                else if(incomingRequest.Contains("Volume"))
+                else if (incomingRequest.Contains("Volume"))
                 {
                     if (incomingRequest.Split(':')[1].Equals("+"))
                         currentRoom.VolUp();
@@ -297,9 +256,32 @@ namespace MaslowsMain
                         currentRoom.VolDown();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 controlSystem.logger.WriteLine("Problem in Touchpannel.evaluateString: " + ex);
+            }
+        }
+
+        public void Start()
+        {
+            CommsServer.StartServer();
+        }
+        public void Stop()
+        {
+            CommsServer.StopServer();
+        }
+        public void OnFireAlarmStateChange(bool state) => CommsServer.SetIndirectTextSignal(1, "FireAlarm " + state.ToString());
+        public void WriteLine(string msg, params object[] args)
+        {
+            var text = String.Format(msg, args) + "\n";
+
+            if (_clientConnected)
+            {
+                CommsServer.SetIndirectTextSignal(1, text);
+            }
+            else
+            {
+                _backlog.Add(text);
             }
         }
     }

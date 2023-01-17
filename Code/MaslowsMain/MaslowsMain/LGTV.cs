@@ -10,8 +10,6 @@ namespace MaslowsMain
     {
         ControlSystem _cs;
         AsyncTCPClient _comms;
-        string _IPADDRESS;
-        int _PORT;
         byte[] _MACADDRESS;
         WakeOnLAN _wakeOnLAN;
 
@@ -28,8 +26,6 @@ namespace MaslowsMain
             this._cs = cs;
 
             this.TVName = name;
-            _IPADDRESS = ipAddr;
-            _PORT = port;
             _MACADDRESS = macAddr;
 
             _wakeOnLAN = new WakeOnLAN(6, ipAddr, _MACADDRESS);

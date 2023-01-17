@@ -14,7 +14,6 @@ namespace MaslowsMain
 
         public event Action<short> SourceSelectedEvent;
         public event Action<bool> RoomTVConnectedEvent;
-        public event Action<bool> RoomIPTVConnectedEvent;
         public event Action<int> RoomVolChangedEvent;
 
         public Room(short roomID, IPTV iptv, LGTV lgtv, ControlSystem cs)
@@ -23,7 +22,6 @@ namespace MaslowsMain
             _roomID = roomID;
 
             this.iptv = iptv;
-            iptv.IPTVConnectedEvent += Iptv_IPTVConnectedEvent;
             
             this.lgtv = lgtv;
             lgtv.TVConnectedEvent += Lgtv_TVConnectedEvent;
@@ -45,7 +43,7 @@ namespace MaslowsMain
             }
         }
 
-        private void Lgtv_VolChangeEvent(int volLevel)
+        void Lgtv_VolChangeEvent(int volLevel)
         {
             try
             {
@@ -62,37 +60,32 @@ namespace MaslowsMain
                 this.RoomVolChangedEvent(volLevel);
             }
         }
-
-        private void Lgtv_TVConnectedEvent(bool connStatus)
+        void Lgtv_TVConnectedEvent(bool connStatus)
         {
             if(this.RoomTVConnectedEvent != null)
             {
                 this.RoomTVConnectedEvent(connStatus);
             }
         }
-
-        private void Iptv_IPTVConnectedEvent(bool connStatus)
+        void OnSourceSelected(int tpID)
         {
-            if (this.RoomIPTVConnectedEvent != null)
+            if (_settings.sourceSelected != -1)
+                lgtv.SourceSelectedChanged(_settings.sources[_settings.sourceSelected], tpID);
+            else
+                lgtv.SourceSelectedChanged("Off", tpID);
+
+            if (this.SourceSelectedEvent != null)
             {
-                this.RoomIPTVConnectedEvent(connStatus);
+                this.SourceSelectedEvent(GetSourceSelected());
             }
         }
-
-        public short GetRoomID() => _roomID;
 
         public string GetRoomName() => _settings.roomName;
         public string[] GetSources() => _settings.sources;
         public short GetSourceSelected() => _settings.sourceSelected;
         public short GetNeighbourRoom() => _settings.neighbourRoom;
         public int GetRoomVolLevel() => lgtv.GetVolumeLevel();
-        public int GetEventSubscribersCount()
-        {
-            if (SourceSelectedEvent != null)
-                return SourceSelectedEvent.GetInvocationList().Length;
-            else
-                return 0;
-        }
+
         public void SetSourceSelected(short value, int tpid)
         {
             try
@@ -111,20 +104,6 @@ namespace MaslowsMain
                 _cs.logger.WriteLine("Problem in Room.SetSourceSelected(): " + ex);
             }
         }
-
-        public void OnSourceSelected(int tpID)
-        {
-            if (_settings.sourceSelected != -1)
-                lgtv.SourceSelectedChanged(_settings.sources[_settings.sourceSelected], tpID);
-            else
-                lgtv.SourceSelectedChanged("Off", tpID);
-
-            if (this.SourceSelectedEvent != null)
-            {
-                this.SourceSelectedEvent(GetSourceSelected());
-            }
-        }
-
         public void SourceBtnPressed(int btnPressed)
         {
             if (_settings.sources[_settings.sourceSelected] == "IPTV")

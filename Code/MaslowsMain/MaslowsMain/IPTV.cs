@@ -12,8 +12,6 @@ namespace MaslowsMain
 
         public string name;
 
-        public event Action<bool> IPTVConnectedEvent;
-
         public IPTV(string ipAddr, int port, string name, ControlSystem contsys)
         {
             cs = contsys;
