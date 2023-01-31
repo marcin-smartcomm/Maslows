@@ -1,0 +1,29 @@
+[Crestron_Toolbox_Address_Book]
+
+[AddressBookInfo]
+Schema=3.0
+Version=1.0
+DefaultEntry=
+
+[ComSpecs]
+CP4=auto 172.16.30.101
+TSW-560P 5.11=auto 172.16.30.102
+TSW-560P 4.17=auto 172.16.30.103
+TSW-560P 3.17=auto 172.16.30.104
+TSW-560P 2.17=auto 172.16.30.105
+TSW-560P 2.16=auto 172.16.30.106
+TSW-560P 2.14=auto 172.16.30.107
+1_USB=usb
+
+[Notes]
+CP4=
+TSW-560P 5.11=
+TSW-560P 4.17=
+TSW-560P 3.17=
+TSW-560P 2.17=
+TSW-560P 2.16=
+TSW-560P 2.14=
+1_USB=
+
+[ExtComSpecs]
+

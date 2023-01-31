@@ -1,0 +1,9 @@
+5.11 - no TSW installed
+
+4.17 	- Kieran raised a ticket with his IT team to change port 'SER4/L4-034' to AV VLAV,
+	until it happens, there will be no comms between TSW and CP4
+	- TVs not getting an IP address
+
+3.17 	- patch lead connected to TSW cannot be found in the ceiling, this needs to be connected
+	to one of the available ports up in the ceiling, once connected we can tell IT to switch the port
+	to AV VLAN
