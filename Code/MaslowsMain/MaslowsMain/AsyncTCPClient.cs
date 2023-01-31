@@ -157,7 +157,7 @@ public class AsyncTCPClient
 
     public void Disconnect(int tpID)
     {
-        cs.logger.WriteLine("Trying to dsiconnect " + _IPADDRESS + ":" + _PORT + ", current connRequests: " + _connRequests.Count);
+        //cs.logger.WriteLine("Trying to dsiconnect " + _IPADDRESS + ":" + _PORT + ", current connRequests: " + _connRequests.Count);
         if (_clientSocket != null)
         {
             if(_connRequests.IndexOf(tpID) != -1)

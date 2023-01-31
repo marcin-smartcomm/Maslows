@@ -28,7 +28,7 @@ namespace MaslowsMain
             this.TVName = name;
             _MACADDRESS = macAddr;
 
-            _wakeOnLAN = new WakeOnLAN(6, ipAddr, _MACADDRESS);
+            _wakeOnLAN = new WakeOnLAN(6, ipAddr, _MACADDRESS, _cs);
 
             _comms = new AsyncTCPClient(cs, ipAddr, port, 4000);
             _comms.MessageReceived += OnMessageReceived;
@@ -36,8 +36,7 @@ namespace MaslowsMain
         }
         public void ConnectRequest(int tpID)
         {
-            if (currentSource != "Off")
-                _comms.ConnectRequest(tpID);
+            _comms.ConnectRequest(tpID);
         }
         public void Disconnect(int tpID) => _comms.Disconnect(tpID);
         public bool GetConnectionStatus() => _comms.GetConnectionStatus();
@@ -61,7 +60,7 @@ namespace MaslowsMain
         }
 
         public int GetVolumeLevel() => volLevel;
-        public void PowerOn() => _wakeOnLAN.SendWakeOnLANMessage();
+        public void PowerOn() => _comms.SendMessage("ka 00 01\r");
         public void PowerOff() => _comms.SendMessage("ka 00 00\r");
         public void VolUp()
         {

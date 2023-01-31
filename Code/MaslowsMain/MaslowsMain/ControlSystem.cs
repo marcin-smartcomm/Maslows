@@ -65,9 +65,23 @@ namespace MaslowsMain
         public void FireAlarmState(bool state)
         {
             for (int i = 0; i < tp.Length; i++)
-                tp[i].OnFireAlarmStateChange(state); 
+                tp[i].OnFireAlarmStateChange(state);
 
+            if (state)
+            {
+                for (int i = 0; i < TVs.Length; i++)
+                    TVs[i].ConnectRequest(2);
 
+                Thread.Sleep(500);
+
+                for (int i = 0; i < TVs.Length; i++)
+                    TVs[i].PowerOff();
+
+                for (int i = 0; i < TVs.Length; i++)
+                    TVs[i].Disconnect(2);
+            }
+
+            return;
             for (int i = 0; i < 10; i++) //num of amps
             {
                 for (int j = 1; j < 5; j++) //num of channels per amp
@@ -115,10 +129,10 @@ namespace MaslowsMain
                 }
 
                 TVs[0] = new LGTV(this, "TV1", "172.16.30.80", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
-                TVs[1] = new LGTV(this, "TV2", "172.16.30.81", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
-                TVs[2] = new LGTV(this, "TV3", "172.16.30.82", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
-                TVs[3] = new LGTV(this, "TV4", "172.16.30.83", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
-                TVs[4] = new LGTV(this, "TV5", "172.16.30.84", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
+                TVs[1] = new LGTV(this, "TV2", "172.16.30.81", 9761, new byte[] { 0x74, 0xE6, 0xB8, 0x4F, 0x60, 0x98 });
+                TVs[2] = new LGTV(this, "TV3", "172.16.30.82", 9761, new byte[] { 0x74, 0xE6, 0xB8, 0x4F, 0x63, 0x59 });
+                TVs[3] = new LGTV(this, "TV4", "172.16.30.83", 9761, new byte[] { 0x74, 0xE6, 0xBB, 0x4F, 0x60, 0xA6 });
+                TVs[4] = new LGTV(this, "TV5", "172.16.30.84", 9761, new byte[] { 0x74, 0xE6, 0xB8, 0x4F, 0x60, 0x96 });
                 TVs[5] = new LGTV(this, "TV6", "172.16.30.85", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
                 TVs[6] = new LGTV(this, "TV7", "172.16.30.86", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
                 TVs[7] = new LGTV(this, "TV8", "172.16.30.87", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
