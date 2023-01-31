@@ -59,6 +59,8 @@ namespace MaslowsMain
 
         private void FireAlarmRelay_StateChange(Relay relay, RelayEventArgs args)
         {
+            logger.WriteLine("Fire Alarm state changed to: " + args.State);
+
             for (int i = 0; i < tp.Length; i++)
                 tp[i].OnFireAlarmStateChange(args.State);
         }
