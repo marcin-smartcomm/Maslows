@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 using Crestron.SimplSharp;                          	// For Basic SIMPL# Classes
+using Crestron.SimplSharpPro.GeneralIO;
 using Crestron.SimplSharpPro;                       	// For Basic SIMPL#Pro classes
 using Crestron.SimplSharpPro.CrestronThread;            // For Threadingb
 using Crestron.SimplSharpPro.UI;
+using Crestron.SimplSharpPro.DeviceSupport;
 
 namespace MaslowsMain
 {
     public class ControlSystem : CrestronControlSystem
     {
-        //Hardware
-        Relay fireAlarmRelay;
-
         MasterIpad masteriPadController;
         CrestronGo masterIPad;
         
@@ -35,21 +35,6 @@ namespace MaslowsMain
                 CrestronEnvironment.SystemEventHandler += new SystemEventHandler(_ControllerSystemEventHandler);
                 CrestronEnvironment.ProgramStatusEventHandler += new ProgramStatusEventHandler(_ControllerProgramEventHandler);
                 CrestronEnvironment.EthernetEventHandler += new EthernetEventHandler(_ControllerEthernetEventHandler);
-
-
-                if (this.SupportsEthernet)
-                {
-                    logger = new ConsoleLogger(55555, this);
-
-                    InitializeEquipment();
-                    InitializeRooms();
-                    InitializeTPs();
-                }
-                if (this.SupportsRelay)
-                {
-                    fireAlarmRelay = this.RelayPorts[1];
-                    fireAlarmRelay.StateChange += FireAlarmRelay_StateChange;
-                }
             }
             catch (Exception e)
             {
@@ -57,12 +42,14 @@ namespace MaslowsMain
             }
         }
 
-        private void FireAlarmRelay_StateChange(Relay relay, RelayEventArgs args)
+        private void FireAlarmRelay_VersiportChange(Versiport port, VersiportEventArgs args)
         {
-            logger.WriteLine("Fire Alarm state changed to: " + args.State);
+            logger.WriteLine("Port" + port.DeviceName + "state changed to: " + args.Event + "Digital In State: " + port.DigitalIn);
 
-            for (int i = 0; i < tp.Length; i++)
-                tp[i].OnFireAlarmStateChange(args.State);
+            FireAlarmState(!port.DigitalIn);
+
+            if (!port.DigitalIn)
+                logger.WriteLine("FireAlarm recorded at: " + DateTime.Now);
         }
         public void FireAlarmState(bool state)
         {
@@ -195,12 +182,36 @@ namespace MaslowsMain
         {
             try
             {
+                if (this.SupportsEthernet)
+                {
+                    logger = new ConsoleLogger(55555, this);
+
+                    InitializeEquipment();
+                    InitializeRooms();
+                    InitializeTPs();
+                }
+
                 for (int i = 0; i < tp.Length; i++)
                 {
                     tp[i].Start();
                 }
                 tpDecider.Start();
                 logger.Start();
+
+                if (this.VersiPorts[1].Register() != eDeviceRegistrationUnRegistrationResponse.Success)
+                {
+                    logger.WriteLine("Error Registering Versiport1: {0}", this.VersiPorts[1].DeviceRegistrationFailureReason);
+                }
+                else
+                {
+                    if (this.VersiPorts[1].SupportsDigitalInput)
+                    {
+                        logger.WriteLine("Configuring versiport as Digital In");
+                        this.VersiPorts[1].SetVersiportConfiguration(eVersiportConfiguration.DigitalInput);
+                    }
+
+                    this.VersiPorts[1].VersiportChange += FireAlarmRelay_VersiportChange;
+                }
             }
             catch (Exception e)
             {

@@ -117,7 +117,7 @@ namespace MaslowsMain
         }
         public void VolDown()
         {
-            lgtv.VolUp();
+            lgtv.VolDown();
         }
 
         public void ConnectRoomEquipment(int tpID)

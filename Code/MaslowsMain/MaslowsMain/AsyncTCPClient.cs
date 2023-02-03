@@ -38,6 +38,8 @@ public class AsyncTCPClient
 
     public void SendMessage(string message)
     {
+        cs.logger.WriteLine("Sending: " + message + ", To : " + _IPADDRESS);
+
         try
         {
             byte[] buffer = Encoding.ASCII.GetBytes(message);
@@ -117,6 +119,8 @@ public class AsyncTCPClient
 
     public void Connect()
     {
+        cs.logger.WriteLine("Trying to connect to: " + _IPADDRESS);
+
         try
         {
             if (!GetConnectionStatus())
@@ -166,6 +170,12 @@ public class AsyncTCPClient
             if (_clientSocket.Connected && _connRequests.Count < 1)
                 _clientSocket.Dispose();
         }
+    }
+
+    public void ForceDisconnect()
+    {
+        _connRequests.Clear();
+        _clientSocket.Dispose();
     }
 
     public void ConnectRequest(int tpID)
