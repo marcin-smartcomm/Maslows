@@ -28,7 +28,7 @@ namespace MaslowsMain
             {
                 //Directional Pad
                 case 0:
-                    btnCodeToSend = "7";
+                    btnCodeToSend = "19";
                     break;
                 case 1:
                     btnCodeToSend = "21";

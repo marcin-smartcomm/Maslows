@@ -15,10 +15,11 @@ namespace MaslowsMain
             "Meeting Room 2.17", 
             "Meeting Room 2.16", 
             "Meeting Room 2.14", 
-            "L1 Event Space", 
-            "L1 Private Dining" 
+            "L1 Event Space",
+            "L1 Private Dining",
+            "Meeting Room 2.15"
         };
 
-        public static bool[] availableLocationsIndex = { true, true, true, true, true, true, true, true };
+        public static bool[] availableLocationsIndex = { true, true, true, true, true, true, true, true, true };
     }
 }

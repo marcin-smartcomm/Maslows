@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 using WebsocketServer;
 
@@ -15,7 +17,7 @@ namespace MaslowsMain
 
         public ControlSystem controlSystem;
 
-        private static Timer aTimer;
+        private static System.Timers.Timer aTimer;
 
         private WebsocketSrvr CommsServer;
         private bool _clientConnected;
@@ -42,7 +44,7 @@ namespace MaslowsMain
 
                 _clientConnected = false;
 
-                aTimer = new Timer();
+                aTimer = new System.Timers.Timer();
                 aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
                 aTimer.Interval = 59000;
                 aTimer.Enabled = true;
@@ -151,9 +153,6 @@ namespace MaslowsMain
 
                     if (currentRoom.GetRoomName().Equals("Meeting Room 3.18"))
                         TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 3.17")] = true;
-
-                    if (currentRoom.GetRoomName().Equals("Meeting Room 2.15"))
-                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 2.16")] = true;
                 }
             }
             else
@@ -172,8 +171,11 @@ namespace MaslowsMain
                     if (currentRoom.GetRoomName().Equals("Meeting Room 3.18"))
                         TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 3.17")] = false;
 
-                    if (currentRoom.GetRoomName().Equals("Meeting Room 2.15"))
-                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 2.16")] = false;
+                    Task.Run(() =>
+                    {
+                        Thread.Sleep(3000);
+                        currentRoom.DisconnectRoomEquipment(tpID);
+                    });
                 }
 
                 if (_backlog.Count > 0)
