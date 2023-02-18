@@ -53,8 +53,20 @@ namespace MaslowsMain
         }
         public void FireAlarmState(bool state)
         {
-            for (int i = 0; i < tp.Length; i++)
-                tp[i].OnFireAlarmStateChange(state);
+            try
+            {
+                logger.WriteLine("Before Informing");
+                for (int i = 0; i < tp.Length; i++)
+                    tp[i].OnFireAlarmStateChange(state);
+
+                logger.WriteLine("After Informing");
+            }
+            catch (Exception ex)
+            {
+                logger.WriteLine("Exception While Informing: " + ex);
+            }
+
+            return;
 
             if (state)
             {
@@ -69,8 +81,6 @@ namespace MaslowsMain
                 for (int i = 0; i < TVs.Length; i++)
                     TVs[i].Disconnect(2);
             }
-
-            return;
             for (int i = 0; i < 10; i++) //num of amps
             {
                 for (int j = 1; j < 5; j++) //num of channels per amp

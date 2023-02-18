@@ -1,7 +1,7 @@
 *
 {
   max-height: 640px;
-  max-width: 540px;
+  max-width: 363px;
   margin: 0px;
   padding: 0px;
 }
@@ -12,7 +12,9 @@
   --text-color-main: white;
   --text-color-secondary: white;
 
-  --btn-color-main: grey;
+  --btn-color-main: rgb(87, 35, 0);
+  background-image: url("../img/bg.jpg");
+  background-repeat: no-repeat;
 }
 
 #connStatus
@@ -25,7 +27,7 @@
 .project-top
 {
   color: var(--text-color-main);
-  background-color: var(--main-color);
+  background-color: rgba(255, 255, 255, 0.2);
   height: 80px;
 }
 
@@ -33,7 +35,6 @@
 {
   width: 540;
   height: 480px;
-  background-color: white;
 }
 
 .project-body
@@ -52,7 +53,7 @@ footer
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: flex-end;
-  background-color: var(--main-color);
+  background-color: rgba(255, 255, 255, 0.2);
   height: 80px;
 }
 
@@ -98,10 +99,11 @@ footer
 
 .vol-btn
 {
-  height: 90%;
-  width: 100%;
-  font-size: 24px;
-  background-color: rgb(160, 160, 160);
+  height: 80%;
+  width: 90%;
+  border-radius: 50%;
+  font-size: 20px;
+  background-color: rgba(255, 255, 255);
 }
 
 .vol-btn:active
@@ -115,7 +117,6 @@ footer
 {
   color: rgb(0, 255, 0);
   font-size: 24px;
-  background-color: grey;
   width: 100%;
   height: 60%;
 }
@@ -135,9 +136,8 @@ footer
 
 .grey-btn
 {
-  background-color: var(white);
-  color: black;
-  background-color: grey;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: white;
   border-radius: 5px;
   box-shadow: 5px 5px rgba(0,0,0,0.2);
   font-size: 36px;
@@ -162,7 +162,7 @@ footer
 
 .off-btn
 {
-  background-color: rgb(136, 0, 0);
+  background-color: rgba(136, 0, 0, 0.7);
   color: var(--text-color-main);
   font-size: 36px;
 }
@@ -216,7 +216,7 @@ footer
   from 
   {
     height: 60px;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.5);
     font-size: 30px;
   }
   to 
@@ -237,7 +237,8 @@ footer
   to 
   {
     height: 60px;
-    background-color: grey;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.3);
   }
 }
 
