@@ -13,7 +13,8 @@
   --text-color-secondary: white;
 
   --btn-color-main: rgb(87, 35, 0);
-  background-image: url("../img/bg.jpg");
+  /*background-image: url("../img/bg.jpg");*/
+  background-color: rgb(44, 44, 44);
   background-repeat: no-repeat;
 }
 

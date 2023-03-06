@@ -27,7 +27,7 @@ function InitializeHomeVariables()
             }
             else
             {
-                if(SourcesList[sourceSelected] == "IPTV" || SourcesList[sourceSelected] == "Sky")
+                if(SourcesList[sourceSelected] == "IPTV")
                 {
                     openSubpage("IPTV");
                 }
@@ -59,21 +59,21 @@ function InitializeHomeVariables()
     }
     else
     {
-        console.log(document.getElementById("tvStatus").innerHTML);
+        //console.log(document.getElementById("tvStatus").innerHTML);
         //in crCom.js
-        if(tvConnStatus == "Connected")
-            connStatus('tvStatus', 'green', tvConnStatus);
-        else if( tvConnStatus == "Trying...")
-            connStatus('tvStatus', 'black', tvConnStatus);
-        else
-            connStatus('tvStatus', 'red', tvConnStatus);
+        //if(tvConnStatus == "Connected")
+        //    connStatus('tvStatus', 'green', tvConnStatus);
+        //else if( tvConnStatus == "Trying...")
+        //    connStatus('tvStatus', 'black', tvConnStatus);
+        //else
+        //    connStatus('tvStatus', 'red', tvConnStatus);
             
-        if(iptvConnStatus == "Connected")
-            connStatus('iptvStatus', 'green', iptvConnStatus);
-        else if( tvConnStatus == "Trying...")
-            connStatus('iptvStatus', 'black', iptvConnStatus);
-        else
-            connStatus('iptvStatus', 'red', iptvConnStatus);
+        //if(iptvConnStatus == "Connected")
+         //   connStatus('iptvStatus', 'green', iptvConnStatus);
+        //else if( tvConnStatus == "Trying...")
+         //   connStatus('iptvStatus', 'black', iptvConnStatus);
+        //else
+          //  connStatus('iptvStatus', 'red', iptvConnStatus);
     }
 
     homePageInitialized = true;
@@ -150,7 +150,7 @@ function AddActiveSourceFb()
     
         selectedSourceBtn.classList.remove('grey-btn-not-active');
         selectedSourceBtn.classList.add('grey-btn-active');
-        if(SourcesList[sourceSelected] == "IPTV" || SourcesList[sourceSelected] == "Sky")
+        if(SourcesList[sourceSelected] == "IPTV")
             moreOptionsMessage.innerHTML += "Press Again for Control";
         else
             moreOptionsMessage.innerHTML += "No Extra Options";

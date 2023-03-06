@@ -65,45 +65,29 @@ namespace MaslowsMain
                     tp[i].OnFireAlarmStateChange(state);
 
                 logger.WriteLine("After Informing");
+
+                if(state)
+                {
+                    logger.WriteLine("Closing Relays...");
+                    for (int i = 1; i < 9; i++)
+                    {
+                        this.RelayPorts[(uint)i].Close();
+                        logger.WriteLine("Relay " + i + " - Closed");
+                    }
+                }
+                else
+                {
+                    logger.WriteLine("Openning Relays...");
+                    for (int i = 1; i < 9; i++)
+                    {
+                        this.RelayPorts[(uint)i].Open();
+                        logger.WriteLine("Relay " + i + " - Opened");
+                    }
+                }
             }
             catch (Exception ex)
             {
                 logger.WriteLine("Exception While Informing: " + ex);
-            }
-
-            return;
-
-            if (state)
-            {
-                for (int i = 0; i < TVs.Length; i++)
-                    TVs[i].PowerOff();
-            }
-            for (int i = 0; i < 10; i++) //num of amps
-            {
-                for (int j = 1; j < 5; j++) //num of channels per amp
-                {
-                    var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://10.0.1." + (20 + i) + "/rest-api/settings/channel/" + j + "/dsp/mute");
-                    httpWebRequest.Accept = "*/*";
-                    httpWebRequest.ContentType = "application/json";
-                    httpWebRequest.Method = "PUT";
-
-                    using (var streamWriter = new System.IO.StreamWriter(httpWebRequest.GetRequestStream()))
-                    {
-                        string json = "{\"value\": " + state.ToString().ToLower() + "}";
-
-                        streamWriter.Write(json);
-                        logger.WriteLine("KArray Amp IP: " + "http://10.0.1." + (20 + i) + ",Sending message: " + json.Replace("{", "(").Replace("}", ")"));
-                    }
-
-                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                    using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
-                    {
-                        var result = streamReader.ReadToEnd();
-                        result = result.Replace('{', '(');
-                        result = result.Replace('}', ')');
-                        logger.WriteLine(result.ToString());
-                    }
-                }
             }
         }
 
@@ -270,11 +254,6 @@ namespace MaslowsMain
                     TVs[args.Sig.Number - 10].VolumeChanged(int.Parse(_SimplWindowsComms.StringOutput[args.Sig.Number].StringValue));
                     break;
             }
-        }
-
-        private void _SimplWindowsComms_MessageReceived(string message)
-        {
-
         }
 
         public void SendMessage(string message)
