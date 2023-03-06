@@ -27,7 +27,7 @@ function InitializeHomeVariables()
             }
             else
             {
-                if(SourcesList[sourceSelected] == "IPTV")
+                if(SourcesList[sourceSelected] == "IPTV" || SourcesList[sourceSelected] == "Sky")
                 {
                     openSubpage("IPTV");
                 }
@@ -150,7 +150,7 @@ function AddActiveSourceFb()
     
         selectedSourceBtn.classList.remove('grey-btn-not-active');
         selectedSourceBtn.classList.add('grey-btn-active');
-        if(SourcesList[sourceSelected] == "IPTV")
+        if(SourcesList[sourceSelected] == "IPTV" || SourcesList[sourceSelected] == "Sky")
             moreOptionsMessage.innerHTML += "Press Again for Control";
         else
             moreOptionsMessage.innerHTML += "No Extra Options";

@@ -5,10 +5,13 @@ using System.Net;
 using System.Threading.Tasks;
 using Crestron.SimplSharp;                          	// For Basic SIMPL# Classes
 using Crestron.SimplSharpPro.GeneralIO;
+using Crestron.SimplSharp.CrestronIO;
 using Crestron.SimplSharpPro;                       	// For Basic SIMPL#Pro classes
 using Crestron.SimplSharpPro.CrestronThread;            // For Threadingb
 using Crestron.SimplSharpPro.UI;
+using Crestron.SimplSharpPro.CrestronConnected;
 using Crestron.SimplSharpPro.DeviceSupport;
+using Crestron.SimplSharpPro.EthernetCommunication;
 
 namespace MaslowsMain
 {
@@ -23,6 +26,8 @@ namespace MaslowsMain
         public Touchpannel tpDecider;
         public IPTV[] iptvs;
         public LGTV[] TVs;
+        IROutputPort _sky1_IRPort;
+        public ThreeSeriesTcpIpEthernetIntersystemCommunications _SimplWindowsComms;
 
         public ControlSystem()
             : base()
@@ -71,15 +76,7 @@ namespace MaslowsMain
             if (state)
             {
                 for (int i = 0; i < TVs.Length; i++)
-                    TVs[i].ConnectRequest(2);
-
-                Thread.Sleep(500);
-
-                for (int i = 0; i < TVs.Length; i++)
                     TVs[i].PowerOff();
-
-                for (int i = 0; i < TVs.Length; i++)
-                    TVs[i].Disconnect(2);
             }
             for (int i = 0; i < 10; i++) //num of amps
             {
@@ -90,7 +87,7 @@ namespace MaslowsMain
                     httpWebRequest.ContentType = "application/json";
                     httpWebRequest.Method = "PUT";
 
-                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                    using (var streamWriter = new System.IO.StreamWriter(httpWebRequest.GetRequestStream()))
                     {
                         string json = "{\"value\": " + state.ToString().ToLower() + "}";
 
@@ -99,7 +96,7 @@ namespace MaslowsMain
                     }
 
                     var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
                     {
                         var result = streamReader.ReadToEnd();
                         result = result.Replace('{', '(');
@@ -224,12 +221,67 @@ namespace MaslowsMain
 
                     this.VersiPorts[1].VersiportChange += FireAlarmRelay_VersiportChange;
                 }
+                logger.WriteLine("Registering IR Devices...");
+                if (ControllerIROutputSlot.Register() != eDeviceRegistrationUnRegistrationResponse.Success)
+                    logger.WriteLine("Problem Registering IR Devices: " + ControllerIROutputSlot.DeviceRegistrationFailureReason);
+                else
+                {
+                    string IRPath = string.Format
+                        (
+                        "{0}/nvram/SkyHD.ir", 
+                        Crestron.SimplSharp.CrestronIO.Directory.GetDirectoryRoot(Crestron.SimplSharp.CrestronIO.Directory.GetApplicationDirectory())
+                        );
+                    logger.WriteLine("getting IR file from: " + IRPath);
+
+                    _sky1_IRPort = IROutputPorts[1];
+                    logger.WriteLine("Sky1 IR Ports Registered successfully");
+                    _sky1_IRPort.LoadIRDriver(IRPath);
+                    logger.WriteLine("Sky1 IR Driver Loaded successfully");
+
+                    foreach (string s in _sky1_IRPort.AvailableIRCmds())
+                        logger.WriteLine("Sky IR: {0}", s);
+                }
+
+                try
+                {
+                    _SimplWindowsComms = new ThreeSeriesTcpIpEthernetIntersystemCommunications(0xB0, "127.0.0.2", this);
+                    if (_SimplWindowsComms.Register() != eDeviceRegistrationUnRegistrationResponse.Success)
+                        logger.WriteLine("Failed To Register Comms with Simpl Windows");
+                    else
+                        _SimplWindowsComms.SigChange += _SimplWindowsComms_SigChange;
+                }
+                catch (Exception ex)
+                {
+                    logger.WriteLine("Problem in ControlSystem InitializeEquipment: " + ex);
+                }
             }
             catch (Exception e)
             {
                 ErrorLog.Error("Error in InitializeSystem: {0}", e.Message);
             }
         }
+
+        private void _SimplWindowsComms_SigChange(Crestron.SimplSharpPro.DeviceSupport.BasicTriList currentDevice, SigEventArgs args)
+        {
+            switch (args.Sig.Type)
+            {
+                case eSigType.String:
+                    logger.WriteLine("Signal coming on join: " + args.Sig.Number);
+                    TVs[args.Sig.Number - 10].VolumeChanged(int.Parse(_SimplWindowsComms.StringOutput[args.Sig.Number].StringValue));
+                    break;
+            }
+        }
+
+        private void _SimplWindowsComms_MessageReceived(string message)
+        {
+
+        }
+
+        public void SendMessage(string message)
+        {
+            _SimplWindowsComms.StringInput[1].StringValue = message;
+        }
+
         void _ControllerEthernetEventHandler(EthernetEventArgs ethernetEventArgs)
         {
             switch (ethernetEventArgs.EthernetEventType)
@@ -286,6 +338,53 @@ namespace MaslowsMain
                     break;
             }
 
+        }
+        public void PushSky1Button(int btnNum)
+        {
+            try
+            {
+                switch (btnNum)
+                {
+                    case 8: _sky1_IRPort.PressAndRelease("TV_GUIDE", 25); break;
+                    //case 0: _sky1_IRPort.PressAndRelease("SKY", 25); break;
+                    //case 2: _sky1_IRPort.PressAndRelease("I", 25); break;
+                    case 7: _sky1_IRPort.PressAndRelease("BOX_OFFICE", 25); break;
+                    case 9: _sky1_IRPort.PressAndRelease("1", 25); break;
+                    case 10: _sky1_IRPort.PressAndRelease("2", 25); break;
+                    case 11: _sky1_IRPort.PressAndRelease("3", 25); break;
+                    case 19: _sky1_IRPort.PressAndRelease("RED", 25); break;
+                    case 12: _sky1_IRPort.PressAndRelease("4", 25); break;
+                    case 13: _sky1_IRPort.PressAndRelease("5", 25); break;
+                    case 14: _sky1_IRPort.PressAndRelease("6", 25); break;
+                    case 20: _sky1_IRPort.PressAndRelease("GREEN", 25); break;
+                    case 15: _sky1_IRPort.PressAndRelease("7", 25); break;
+                    case 16: _sky1_IRPort.PressAndRelease("8", 25); break;
+                    case 17: _sky1_IRPort.PressAndRelease("9", 25); break;
+                    case 21: _sky1_IRPort.PressAndRelease("YELLOW", 25); break;
+                    case 18: _sky1_IRPort.PressAndRelease("0", 25); break;
+                    case 22: _sky1_IRPort.PressAndRelease("BLUE", 25); break;
+                    case 0: _sky1_IRPort.PressAndRelease("UP", 25); break;
+                    case 1: _sky1_IRPort.PressAndRelease("LEFT", 25); break;
+                    case 2: _sky1_IRPort.PressAndRelease("SELECT", 25); break;
+                    case 3: _sky1_IRPort.PressAndRelease("RIGHT", 25); break;
+                    case 4: _sky1_IRPort.PressAndRelease("DOWN", 25); break;
+                    case 5: _sky1_IRPort.PressAndRelease("CH+", 25); break;
+                    case 6: _sky1_IRPort.PressAndRelease("CH-", 25); break;
+                    case 25: _sky1_IRPort.PressAndRelease("REV", 25); break;
+                    case 26: _sky1_IRPort.PressAndRelease("PLAY", 25); break;
+                    case 27: _sky1_IRPort.PressAndRelease("STOP", 25); break;
+                    case 28: _sky1_IRPort.PressAndRelease("RECORD", 25); break;
+                    case 29: _sky1_IRPort.PressAndRelease("FFWD", 25); break;
+                    case 30: _sky1_IRPort.PressAndRelease("BACK_UP", 25); break;
+                    case 31: _sky1_IRPort.PressAndRelease("PAUSE", 25); break;
+                }
+
+                logger.WriteLine("IR command sent on port 1");
+            }
+            catch (Exception ex)
+            {
+                logger.WriteLine("Problem in Sky: " + ex);
+            }
         }
     }
 }

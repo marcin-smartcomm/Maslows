@@ -1,7 +1,8 @@
 {
   "roomName": "L1 Event Space",
   "sources": [
-    "Mersive",
+    "Collaborate",
+    "Sky",
     "IPTV"
   ],
   "sourceSelected": -1,

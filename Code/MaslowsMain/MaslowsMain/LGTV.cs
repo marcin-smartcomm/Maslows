@@ -9,7 +9,7 @@ namespace MaslowsMain
     public class LGTV
     {
         ControlSystem _cs;
-        AsyncTCPClient _comms;
+        //AsyncTCPClient _comms;
         byte[] _MACADDRESS;
         WakeOnLAN _wakeOnLAN;
 
@@ -30,16 +30,16 @@ namespace MaslowsMain
 
             _wakeOnLAN = new WakeOnLAN(6, ipAddr, _MACADDRESS, _cs);
 
-            _comms = new AsyncTCPClient(cs, ipAddr, port, 4000);
-            _comms.MessageReceived += OnMessageReceived;
-            _comms.ConnectedEvent += OnDeviceConnected;
+            //_comms = new AsyncTCPClient(cs, ipAddr, port, 4000);
+            //_comms.MessageReceived += OnMessageReceived;
+            //_comms.ConnectedEvent += OnDeviceConnected;
         }
         public void ConnectRequest(int tpID)
         {
-            _comms.ConnectRequest(tpID);
+            //_comms.ConnectRequest(tpID);
         }
-        public void Disconnect(int tpID) => _comms.Disconnect(tpID);
-        public bool GetConnectionStatus() => _comms.GetConnectionStatus();
+        //public void Disconnect(int tpID) => _comms.Disconnect(tpID);
+        //public bool GetConnectionStatus() => _comms.GetConnectionStatus();
 
 
         void OnMessageReceived(object source, MessageReceivedEventArgs e)
@@ -62,70 +62,24 @@ namespace MaslowsMain
         public int GetVolumeLevel() => volLevel;
         public void PowerOn()
         {
-            Task.Run(() =>
-            {
-                //Backlight Brightness 100%
-                _comms.SendMessage("mg 01 64\r");
-                Thread.Sleep(500);
-
-                //Screen Mute Off
-                _comms.SendMessage("kd 01 00\r");
-                Thread.Sleep(500);
-
-                //Return to volume at power off
-                string newVolumeHex = volLevelAtPowerOff.ToString("X2");
-                _comms.SendMessage("kf 01 " + newVolumeHex + "\r");
-                Thread.Sleep(500);
-
-                //TV should be always On
-                _comms.SendMessage("ka 01 01\r");
-            });
+            _cs.SendMessage(TVName + ":PowerOn");
         }
         public void PowerOff()
         {
-            volLevelAtPowerOff = volLevel;
-
-            Task.Run(() =>
-            {
-                //Backlight Brightness 0%
-                _comms.SendMessage("mg 01 00\r");
-                Thread.Sleep(500);
-
-                //Screen Mute On
-                _comms.SendMessage("kd 01 01\r");
-                Thread.Sleep(500);
-
-                //Kill Volume
-                _comms.SendMessage("kf 01 00\r");
-            });
+            _cs.SendMessage(TVName + ":PowerOff");
         }
         public void VolUp()
         {
-            if(volLevel >= 95)
-                _comms.SendMessage("kf 01 64\r");
-            else
-            {
-                int newVolume = volLevel + 5;
-                string newVolumeHex = newVolume.ToString("X2");
-                _comms.SendMessage("kf 01 " + newVolumeHex + "\r");
-            }
+            _cs.SendMessage(TVName + ":VolUp");
         }
         public void VolDown()
         {
-            if (volLevel <= 5)
-                _comms.SendMessage("kf 01 00\r");
-            else
-            {
-                int newVolume = volLevel - 5;
-                string newVolumeHex = newVolume.ToString("X2");
-                _comms.SendMessage("kf 01 " + newVolumeHex + "\r");
-            }
+            _cs.SendMessage(TVName + ":VolDown");
         }
 
         int HDMISelect(int hdmiInput)
         {
-            if(_comms.GetConnectionStatus())
-                _comms.SendMessage("xb 01 9" + (hdmiInput-1) + "\r");
+            _cs.SendMessage(TVName + ":HDMI" + hdmiInput);
             return 1;
         }
         static int Delay(int toReturnAfterDelay, int milisecondDelay)
@@ -169,7 +123,7 @@ namespace MaslowsMain
                     });
                 }
             }
-            else if (source.Equals("Mersive"))
+            else if (source.Equals("Collaborate"))
             {
                 if (!wasOff)
                     HDMISelect(2);
@@ -181,18 +135,23 @@ namespace MaslowsMain
                     });
                 }
             }
-            else if (source.Equals("Laptop"))
+            else if (source.Equals("Sky"))
             {
                 if (!wasOff)
-                    HDMISelect(2);
+                    HDMISelect(1);
                 else
                 {
                     Task.Run(() =>
                     {
-                        HDMISelect(Delay(2, 2000));
+                        HDMISelect(Delay(1, 2000));
                     });
                 }
             }
+        }
+
+        public void VolumeChanged(int volLevel)
+        {
+            OnVolumeChange(volLevel);
         }
 
         void evaluateResponse(string textToProcess)

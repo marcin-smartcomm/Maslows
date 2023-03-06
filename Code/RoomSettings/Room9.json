@@ -1,8 +1,8 @@
 {
-  "roomName": "Meeting Room 2.14",
+  "roomName": "Meeting Room 201",
   "sources": [
-    "Laptop",
-    "Mersive",
+    "Collaborate",
+    "Sky",
     "IPTV"
   ],
   "sourceSelected": -1,

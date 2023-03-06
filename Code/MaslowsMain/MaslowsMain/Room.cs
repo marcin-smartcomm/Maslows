@@ -110,6 +110,10 @@ namespace MaslowsMain
             {
                 iptv.PushButton(btnPressed);
             }
+            if(_settings.sources[_settings.sourceSelected] == "Sky")
+            {
+                _cs.PushSky1Button(btnPressed);
+            }
         }
         public void VolUp()
         {
@@ -126,7 +130,7 @@ namespace MaslowsMain
         }
         public void DisconnectRoomEquipment(int tpID)
         {
-            lgtv.Disconnect(tpID);
+            //lgtv.Disconnect(tpID);
         }
 
     }

@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='ISO-8859-1' ?>
 <File Type='Manifest' Version='6.1.0' ObjectDisplayList='4'>
-<Project FileName='iPad-Maslows-v1.zip' Size='1898049' Build='20221201192721'>
+<Project FileName='iPad-Maslows-v1.zip' Size='1898118' Build='20230302130820'>
 <Sources>
-<Source FileName='iPad-Maslows-v1.xml' Size='538' Type='Application' Build='20221201192721' MinimumSGVersion='2.11.05.00' />
+<Source FileName='iPad-Maslows-v1.xml' Size='538' Type='Application' Build='20230302130820' MinimumSGVersion='2.11.05.00' />
 </Sources>
 </Project>
 </File>
