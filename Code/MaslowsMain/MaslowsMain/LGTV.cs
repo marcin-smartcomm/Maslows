@@ -94,7 +94,7 @@ namespace MaslowsMain
             Thread.Sleep(milisecondDelay);
         }
 
-        public void SourceSelectedChanged(string source, int tpID)
+        public void SourceSelectedChanged(string source)
         {
             bool wasOff = false;
 

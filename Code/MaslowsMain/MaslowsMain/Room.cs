@@ -67,12 +67,12 @@ namespace MaslowsMain
                 this.RoomTVConnectedEvent(connStatus);
             }
         }
-        void OnSourceSelected(int tpID)
+        void OnSourceSelected()
         {
             if (_settings.sourceSelected != -1)
-                lgtv.SourceSelectedChanged(_settings.sources[_settings.sourceSelected], tpID);
+                lgtv.SourceSelectedChanged(_settings.sources[_settings.sourceSelected]);
             else
-                lgtv.SourceSelectedChanged("Off", tpID);
+                lgtv.SourceSelectedChanged("Off");
 
             if (this.SourceSelectedEvent != null)
             {
@@ -86,7 +86,7 @@ namespace MaslowsMain
         public short GetNeighbourRoom() => _settings.neighbourRoom;
         public int GetRoomVolLevel() => lgtv.GetVolumeLevel();
 
-        public void SetSourceSelected(short value, int tpid)
+        public void SetSourceSelected(short value)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace MaslowsMain
                     _settings.sourceSelected = value;
                     FileOperations.UpdateSettings(_roomID.ToString(), _settings);
 
-                    OnSourceSelected(tpid);
+                    OnSourceSelected();
                 }
                 catch (Exception ex) { _cs.logger.WriteLine("Problem in Room.SetSourceSelected(): " + ex); }
             }

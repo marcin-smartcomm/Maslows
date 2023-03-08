@@ -66,10 +66,15 @@ let inactivityTime = function() {
   }
   function resetTimer() {
     clearTimeout(time);
-    time = setTimeout(logout, 15000)
+    time = setTimeout(logout, 120000)
   }
 };
-document.onload = inactivityTime();
+document.onload = PanelBoot();
+
+function PanelBoot()
+{
+  inactivityTime();
+}
     
 function checkDirection() {
   if(parseInt(neighbourRoom) > -1)

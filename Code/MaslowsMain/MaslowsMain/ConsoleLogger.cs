@@ -100,6 +100,13 @@ namespace MaslowsMain
                 else
                     _server.SetIndirectTextSignal(1, "Invalid Command");
             }
+            if (value.ToString().Contains("Relays"))
+            {
+                if (value.ToString().Split(':')[1].Equals("Open"))
+                    _cs.OpenRelays();
+                if (value.ToString().Split(':')[1].Equals("Close"))
+                    _cs.CloseRelays();
+            }
         }
     }
 }

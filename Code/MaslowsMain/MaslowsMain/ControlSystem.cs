@@ -91,6 +91,30 @@ namespace MaslowsMain
             }
         }
 
+        public void CloseRelays()
+        {
+            Task.Run(() =>
+            {
+                for(uint i = 1; i < 9;i++)
+                {
+                    this.RelayPorts[i].Close();
+                    Thread.Sleep(1000);
+                }
+            });
+        }
+
+        public void OpenRelays()
+        {
+            Task.Run(() =>
+            {
+                for (uint i = 1; i < 9; i++)
+                {
+                    this.RelayPorts[i].Open();
+                    Thread.Sleep(1000);
+                }
+            });
+        }
+
         void InitializeEquipment()
         {
             try
@@ -191,6 +215,13 @@ namespace MaslowsMain
                 tpDecider.Start();
                 logger.Start();
 
+                for(uint i = 1; i < 9; i++)
+                {
+                    if (this.RelayPorts[i].Register() != eDeviceRegistrationUnRegistrationResponse.Success)
+                    {
+                        logger.WriteLine("Error Registering Relay" + i +": {0}", this.RelayPorts[i].DeviceRegistrationFailureReason);
+                    }
+                }
                 if (this.VersiPorts[1].Register() != eDeviceRegistrationUnRegistrationResponse.Success)
                 {
                     logger.WriteLine("Error Registering Versiport1: {0}", this.VersiPorts[1].DeviceRegistrationFailureReason);
@@ -250,8 +281,19 @@ namespace MaslowsMain
             switch (args.Sig.Type)
             {
                 case eSigType.String:
-                    logger.WriteLine("Signal coming on join: " + args.Sig.Number);
-                    TVs[args.Sig.Number - 10].VolumeChanged(int.Parse(_SimplWindowsComms.StringOutput[args.Sig.Number].StringValue));
+                    if(args.Sig.Number == 1)
+                    {
+                        if(_SimplWindowsComms.StringOutput[1].StringValue.Equals("WakeSystem"))
+                        {
+                            foreach (Room room in rooms)
+                                room.SetSourceSelected(0);
+                        }
+                    }
+                    else
+                    {
+                        logger.WriteLine("Signal coming on join: " + args.Sig.Number);
+                        TVs[args.Sig.Number - 10].VolumeChanged(int.Parse(_SimplWindowsComms.StringOutput[args.Sig.Number].StringValue));
+                    }
                     break;
             }
         }

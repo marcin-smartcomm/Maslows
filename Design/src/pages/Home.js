@@ -3,7 +3,9 @@ let iptvConnStatus = "Trying..."
 
 let SourcesList = {}
 let SourceBtns = []
-let sourceSelected = -1;
+let sourceSelected = 0;
+let previousSourceSelected;
+let sourceSelectionDisabled = false;
 let nextRoom = 0;
 
 let volLabel;
@@ -20,6 +22,9 @@ function InitializeHomeVariables()
     for(let i = 0; i < SourcesList.length; i++)
     {
         document.getElementById(`${i}`).addEventListener('click', function(e){
+            if(sourceSelectionDisabled)
+                return;
+        
             if(sourceSelected != i)
             {
                 sendMessage(`SetSourceSelected:${i}`);
@@ -34,13 +39,25 @@ function InitializeHomeVariables()
             }
         })
     }
-    document.getElementById("roomOffBtn").addEventListener('click', function(e)
+    
+    const timeNow = new Date();
+    if(
+        (timeNow.getHours() >= 20 && timeNow.getMinutes() >= 30) ||
+        timeNow.getHours() > 20 ||
+        timeNow.getHours() <= 6
+    )
     {
-        sendMessage("RoomOff")
+        document.getElementById("roomOffBtn").addEventListener('click', function(e)
+        {
+            if(sourceSelectionDisabled)
+                return;
+        
+            sendMessage("RoomOff")
 
-        ClearSourceFb();
-        e.target.classList.add('off-btn-active');
-    })
+            ClearSourceFb();
+            e.target.classList.add('off-btn-active');
+        })
+    }
 
     //Initialize Footer
     document.getElementById("volUpBtn").addEventListener('click', function()
@@ -108,6 +125,7 @@ function AddSourcesToInterface()
         let sourceBtnLabel = document.createElement("div")
         sourceBtnLabel.innerHTML = source;
         sourceBtnLabel.style.width = "100%";
+        sourceBtnLabel.style.color = "black";
 
         sourceBtn.appendChild(sourceBtnLabel);
         sourceBtn.classList.add('source-btn', 'grey-btn');
@@ -118,13 +136,21 @@ function AddSourcesToInterface()
         i++;
       });
 
-      let sourceBtn = document.createElement("div");
-      sourceBtn.innerHTML = "Room Off"
-      sourceBtn.classList.add('source-btn', 'off-btn');
-      sourceBtn.id = "roomOffBtn"
-      btnsContainer.appendChild(sourceBtn);
+    const timeNow = new Date();
+    if(
+    (timeNow.getHours() >= 20 && timeNow.getMinutes() >= 30) ||
+    timeNow.getHours() > 20 ||
+    timeNow.getHours() <= 6
+    )
+    {
+        let sourceBtn = document.createElement("div");
+        sourceBtn.innerHTML = "Room Off"
+        sourceBtn.classList.add('source-btn', 'off-btn');
+        sourceBtn.id = "roomOffBtn"
+        btnsContainer.appendChild(sourceBtn);
+    }
 
-      AddActiveSourceFb();
+    AddActiveSourceFb();
 }
 
 function PopulateInterface()
@@ -143,22 +169,56 @@ function PopulateInterface()
 
 function AddActiveSourceFb()
 {
+    if(previousSourceSelected == -1 && sourceSelected != -1)
+    {
+        disableSourceSelection(sourceSelected);
+    }
+
     if(sourceSelected > -1)
     {
-        let moreOptionsMessage = document.createElement("div");
         let selectedSourceBtn = document.getElementById(sourceSelected);
     
         selectedSourceBtn.classList.remove('grey-btn-not-active');
-        selectedSourceBtn.classList.add('grey-btn-active');
-        if(SourcesList[sourceSelected] == "IPTV")
-            moreOptionsMessage.innerHTML += "Press Again for Control";
+
+        if(!sourceSelectionDisabled)
+            selectedSourceBtn.classList.add('grey-btn-active');
         else
-            moreOptionsMessage.innerHTML += "No Extra Options";
-    
-        moreOptionsMessage.style.fontSize = "20px";
-    
-        selectedSourceBtn.appendChild(moreOptionsMessage);
+        {
+            selectedSourceBtn.classList.add('grey-btn-activating');
+        }
+
+        if(!sourceSelectionDisabled)
+        {
+            AddExtraText(selectedSourceBtn);
+        }
     }
+    previousSourceSelected = sourceSelected;
+}
+
+function AddExtraText(sourceBtn)
+{
+    let moreOptionsMessage = document.createElement("div");
+    if(SourcesList[sourceSelected] == "IPTV")
+        moreOptionsMessage.innerHTML += "Press Again for Control";
+    else
+        moreOptionsMessage.innerHTML += "No Extra Options";
+
+    moreOptionsMessage.style.fontSize = "20px";
+
+    sourceBtn.appendChild(moreOptionsMessage);
+}
+
+function disableSourceSelection(sSelected)
+{
+    let currentSourceName = document.getElementById(sSelected).firstChild.innerHTML;
+    document.getElementById(sSelected).firstChild.innerHTML = "System Initializing...";
+
+    sourceSelectionDisabled = true;
+    setTimeout(() => {
+        document.getElementById(sSelected).firstChild.innerHTML = currentSourceName;
+        AddExtraText(document.getElementById(sSelected))
+        sourceSelectionDisabled = false;
+    }, 60000);
 }
 
 function ClearSourceFb()
@@ -168,6 +228,7 @@ function ClearSourceFb()
         if(sourceSelected > -1 && currentSubpage == "Home")
         {
             document.getElementById(sourceSelected).classList.remove('grey-btn-active');
+            document.getElementById(sourceSelected).classList.remove('grey-btn-activating');
             document.getElementById(sourceSelected).classList.add('grey-btn-not-active');
             
             let sourceBtnLabel = document.createElement("div")
@@ -204,6 +265,7 @@ function ProcessSourceSelected(ss)
     }
     else if (parseInt(ss) == -1 && currentSubpage != "Home")
     {
+        previousSourceSelected = sourceSelected;
         openSubpage("Home");
         ClearSourceFb();
         try
@@ -214,6 +276,7 @@ function ProcessSourceSelected(ss)
     }
     else
     {
+        previousSourceSelected = sourceSelected;
         ClearSourceFb();
     }
     
