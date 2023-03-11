@@ -1,9 +1,8 @@
 {
   "roomName": "L1 Event Space",
   "sources": [
-    "Collaborate",
-    "Sky",
-    "IPTV"
+    "Wireless",
+    "TV"
   ],
   "sourceSelected": -1,
   "neighbourRoom": -1,

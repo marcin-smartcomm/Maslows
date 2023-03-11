@@ -34,6 +34,7 @@ addressDB.onsuccess = function() {
             _webSocket = new WebSocket("ws://" + webSocketServerIPAddress + ":50000")
         else
         {
+            //_webSocket = new WebSocket("ws://172.16.30.101:50000")
             _webSocket = new WebSocket(idQuery.result.url)
         }
             

@@ -1,9 +1,9 @@
 {
   "roomName": "Meeting Room 204",
   "sources": [
-    "Collaborate",
-    "Sky",
-    "IPTV"
+    "Laptop",
+    "Wireless",
+    "TV"
   ],
   "sourceSelected": -1,
   "neighbourRoom": -1,

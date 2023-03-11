@@ -111,29 +111,13 @@ namespace MaslowsMain
                 PowerOn();
             }
 
-            if(source.Equals("IPTV"))
+            if(source.Equals("IPTV") || source.Equals("TV"))
             {
-                if(!wasOff)
-                    HDMISelect(1);
-                else
-                {
-                    Task.Run(() =>
-                    {
-                        HDMISelect(Delay(1, 2000));
-                    });
-                }
+                _cs.SendMessage(TVName + ":HDMI1");
             }
-            else if (source.Equals("Collaborate"))
+            else if (source.Equals("Laptop") || source.Equals("Wireless"))
             {
-                if (!wasOff)
-                    HDMISelect(2);
-                else
-                {
-                    Task.Run(() =>
-                    {
-                        HDMISelect(Delay(2, 2000));
-                    });
-                }
+                _cs.SendMessage(TVName + ":" + source);
             }
             else if (source.Equals("Sky"))
             {

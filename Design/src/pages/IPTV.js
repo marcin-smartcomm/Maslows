@@ -57,12 +57,12 @@ let IPTVtouchendX = 0
 function IPTVcheckDirection() {
   if (IPTVtouchendX < IPTVtouchstartX)
   {
-    if(currentSubpage == "IPTV")
+    if(currentSubpage == "TV")
     {
       openSubpage("IPTVNumpad");
       InitializeIPTVNumpad();
     }
     else
-      openSubpage("IPTV");
+      openSubpage("TV");
   }
 }

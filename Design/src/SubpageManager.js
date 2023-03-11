@@ -84,7 +84,7 @@ function InitializeSubpageVariables(pageToInitialize)
     //in crCom.js
     ping();
   }
-  if(pageToInitialize == "IPTV")
+  if(pageToInitialize == "TV")
   {
     InitializeIPTVVariables();
   }

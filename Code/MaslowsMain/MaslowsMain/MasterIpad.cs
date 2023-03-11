@@ -24,7 +24,7 @@ namespace MaslowsMain
             _roomList = rooms;
             _iPad = iPad;
 
-            _iPad.ParameterProjectName.Value = "ipadtest";
+            _iPad.ParameterProjectName.Value = "iPad-Maslows-v1";
             _iPad.SigChange += MasterIPad_SigChange;
             _iPad.OnlineStatusChange += MasterIPad_OnlineStatusChange;
             if (_iPad.Register() != eDeviceRegistrationUnRegistrationResponse.Success)
@@ -129,6 +129,7 @@ namespace MaslowsMain
                         if (args.Sig.Number == 41) if (args.Sig.BoolValue == true) _roomList[currentRoom].SetSourceSelected(1);
                         if (args.Sig.Number == 42) if (args.Sig.BoolValue == true) _roomList[currentRoom].SetSourceSelected(2);
                         if (args.Sig.Number == 43) if (args.Sig.BoolValue == true) _roomList[currentRoom].SetSourceSelected(-1);
+                        if (args.Sig.Number == 44) if (args.Sig.BoolValue == true) _roomList[currentRoom].SetSourceSelected(3);
 
                         CheckSourcePresses(args);
                             break;
@@ -172,6 +173,17 @@ namespace MaslowsMain
                 _iPad.BooleanInput[62].BoolValue = true;
                 _iPad.StringInput[42].StringValue = roomSources[2];
             }
+            if (roomSources.Length == 4)
+            {
+                _iPad.BooleanInput[60].BoolValue = true;
+                _iPad.StringInput[40].StringValue = roomSources[0];
+                _iPad.BooleanInput[61].BoolValue = true;
+                _iPad.StringInput[41].StringValue = roomSources[1];
+                _iPad.BooleanInput[62].BoolValue = true;
+                _iPad.StringInput[42].StringValue = roomSources[2];
+                _iPad.BooleanInput[64].BoolValue = true;
+                _iPad.StringInput[44].StringValue = roomSources[3];
+            }
         }
         void AddSourceFb(short source)
         {
@@ -180,6 +192,7 @@ namespace MaslowsMain
                 _iPad.BooleanInput[40].BoolValue = false;
                 _iPad.BooleanInput[41].BoolValue = false;
                 _iPad.BooleanInput[42].BoolValue = false;
+                _iPad.BooleanInput[44].BoolValue = false;
 
                 _iPad.BooleanInput[43].BoolValue = true;
                 _iPad.BooleanInput[50].BoolValue = false;
@@ -192,6 +205,7 @@ namespace MaslowsMain
                 _iPad.BooleanInput[40].BoolValue = true;
                 _iPad.BooleanInput[41].BoolValue = false;
                 _iPad.BooleanInput[42].BoolValue = false;
+                _iPad.BooleanInput[44].BoolValue = false;
 
                 _iPad.BooleanInput[43].BoolValue = false;
             }
@@ -200,6 +214,7 @@ namespace MaslowsMain
                 _iPad.BooleanInput[40].BoolValue = false;
                 _iPad.BooleanInput[41].BoolValue = true;
                 _iPad.BooleanInput[42].BoolValue = false;
+                _iPad.BooleanInput[44].BoolValue = false;
 
                 _iPad.BooleanInput[43].BoolValue = false;
             }
@@ -208,6 +223,16 @@ namespace MaslowsMain
                 _iPad.BooleanInput[40].BoolValue = false;
                 _iPad.BooleanInput[41].BoolValue = false;
                 _iPad.BooleanInput[42].BoolValue = true;
+                _iPad.BooleanInput[44].BoolValue = false;
+
+                _iPad.BooleanInput[43].BoolValue = false;
+            }
+            if (source == 3)
+            {
+                _iPad.BooleanInput[40].BoolValue = false;
+                _iPad.BooleanInput[41].BoolValue = false;
+                _iPad.BooleanInput[42].BoolValue = false;
+                _iPad.BooleanInput[44].BoolValue = true;
 
                 _iPad.BooleanInput[43].BoolValue = false;
             }

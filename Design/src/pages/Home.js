@@ -4,7 +4,7 @@ let iptvConnStatus = "Trying..."
 let SourcesList = {}
 let SourceBtns = []
 let sourceSelected = 0;
-let previousSourceSelected;
+let previousSourceSelected = 0;
 let sourceSelectionDisabled = false;
 let nextRoom = 0;
 
@@ -32,9 +32,9 @@ function InitializeHomeVariables()
             }
             else
             {
-                if(SourcesList[sourceSelected] == "IPTV")
+                if(SourcesList[sourceSelected] == "TV")
                 {
-                    openSubpage("IPTV");
+                    openSubpage("TV");
                 }
             }
         })
@@ -163,7 +163,15 @@ function PopulateInterface()
   }
   else
   {
-      document.getElementById("roomOffBtn").classList.add('off-btn-active');
+    const timeNow = new Date();
+    if(
+    (timeNow.getHours() >= 20 && timeNow.getMinutes() >= 30) ||
+    timeNow.getHours() > 20 ||
+    timeNow.getHours() <= 6
+    )
+    {
+        document.getElementById("roomOffBtn").classList.add('off-btn-active');
+    }
   }
 }
 
@@ -198,7 +206,7 @@ function AddActiveSourceFb()
 function AddExtraText(sourceBtn)
 {
     let moreOptionsMessage = document.createElement("div");
-    if(SourcesList[sourceSelected] == "IPTV")
+    if(SourcesList[sourceSelected] == "TV")
         moreOptionsMessage.innerHTML += "Press Again for Control";
     else
         moreOptionsMessage.innerHTML += "No Extra Options";

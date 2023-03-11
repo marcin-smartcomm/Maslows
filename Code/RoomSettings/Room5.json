@@ -1,9 +1,7 @@
 {
   "roomName": "Lounge 302",
   "sources": [
-    "Collaborate",
-    "Sky",
-    "IPTV"
+    "TV"
   ],
   "sourceSelected": -1,
   "neighbourRoom": 4,

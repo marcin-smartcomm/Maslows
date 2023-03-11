@@ -60,29 +60,22 @@ namespace MaslowsMain
         {
             try
             {
-                logger.WriteLine("Before Informing");
                 for (int i = 0; i < tp.Length; i++)
                     tp[i].OnFireAlarmStateChange(state);
 
-                logger.WriteLine("After Informing");
+                logger.WriteLine("Informed TPs of fire alarm state");
 
                 if(state)
                 {
-                    logger.WriteLine("Closing Relays...");
-                    for (int i = 1; i < 9; i++)
-                    {
-                        this.RelayPorts[(uint)i].Close();
-                        logger.WriteLine("Relay " + i + " - Closed");
-                    }
+                    logger.WriteLine("Closing Relay...");
+                    this.RelayPorts[1].Close();
+                    logger.WriteLine("Relay1 - Closed");
                 }
                 else
                 {
-                    logger.WriteLine("Openning Relays...");
-                    for (int i = 1; i < 9; i++)
-                    {
-                        this.RelayPorts[(uint)i].Open();
-                        logger.WriteLine("Relay " + i + " - Opened");
-                    }
+                    logger.WriteLine("Openning Relay...");
+                    this.RelayPorts[1].Open();
+                    logger.WriteLine("Relay1 - Open");
                 }
             }
             catch (Exception ex)
@@ -95,7 +88,7 @@ namespace MaslowsMain
         {
             Task.Run(() =>
             {
-                for(uint i = 1; i < 9;i++)
+                for(uint i = 1; i < 2;i++)
                 {
                     this.RelayPorts[i].Close();
                     Thread.Sleep(1000);
@@ -107,7 +100,7 @@ namespace MaslowsMain
         {
             Task.Run(() =>
             {
-                for (uint i = 1; i < 9; i++)
+                for (uint i = 1; i < 2; i++)
                 {
                     this.RelayPorts[i].Open();
                     Thread.Sleep(1000);
@@ -286,7 +279,7 @@ namespace MaslowsMain
                         if(_SimplWindowsComms.StringOutput[1].StringValue.Equals("WakeSystem"))
                         {
                             foreach (Room room in rooms)
-                                room.SetSourceSelected(0);
+                                room.SetSourceSelected(1);
                         }
                     }
                     else
