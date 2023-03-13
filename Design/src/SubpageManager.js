@@ -5,6 +5,9 @@ let blankOutBtnsVis = false;
 
 function openSubpage(file)
 {
+  if(SlavePanel && file == "Home")
+    file = "SlavePanel"
+
   document.getElementById("subpageSection").classList.add("transitionIn")
   
   if(currentSubpage != null)
@@ -80,9 +83,10 @@ function InitializeSubpageVariables(pageToInitialize)
   {
     showFooter(true);
     InitializeHomeVariables();
-
-    //in crCom.js
-    ping();
+  }
+  if(pageToInitialize == "SlavePanel")
+  {
+    InitializeSlavePanelVariables();
   }
   if(pageToInitialize == "TV")
   {
@@ -92,4 +96,6 @@ function InitializeSubpageVariables(pageToInitialize)
   {
     InitializeTPSelectionVariables();
   }
+  if(pageToInitialize == "Settings")
+    InitializeSettingsVariables();
 }

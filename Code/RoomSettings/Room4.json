@@ -6,6 +6,9 @@
     "TV"
   ],
   "sourceSelected": -1,
-  "neighbourRoom": 5,
+  "neighbourRoom": 4,
+  "joined": false,
+  "MasterPanel": false,
+  "slave": false,
   "volume": 50
 }

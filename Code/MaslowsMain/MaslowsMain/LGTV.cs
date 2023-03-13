@@ -96,6 +96,8 @@ namespace MaslowsMain
 
         public void SourceSelectedChanged(string source)
         {
+            _cs.logger.WriteLine(TVName + ": Changing source to " + source);
+
             bool wasOff = false;
 
             if (source.Equals("Off"))

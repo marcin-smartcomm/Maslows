@@ -9,12 +9,12 @@
 :root
 {
   --main-color: rgb(66, 66, 66);
-  --text-color-main: white;
+  --text-color-main: #fbfbf3;
   --text-color-secondary: grey;
 
   --btn-color-main: rgb(87, 35, 0);
   /*background-image: url("../img/bg.jpg");*/
-  background-color: rgb(255, 255, 255);
+  background-color: #fbfbf3;
   background-repeat: no-repeat;
 }
 
@@ -44,6 +44,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   height: 100%;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -52,7 +53,7 @@ footer
 {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   background-color: rgb(71, 71, 71);
   height: 80px;
@@ -87,8 +88,15 @@ footer
   display: flex;
   align-items: center;
   justify-content:center;
+  margin-left: 60px;
   width: 60%;
   height: 100%;
+}
+
+#settingsButton
+{
+  margin-left: 5px;
+  color: white;
 }
 
 .control-container
@@ -133,15 +141,14 @@ footer
 {
   width: 300px;
   height: 60px;
+  font-size: 36px;
 }
 
 .grey-btn
 {
-  background-color: rgba(255, 255, 255, 0.3);
   color: white;
   border-radius: 5px;
   box-shadow: 5px 5px rgba(0,0,0,0.2);
-  font-size: 36px;
 }
 
 .grey-btn:active

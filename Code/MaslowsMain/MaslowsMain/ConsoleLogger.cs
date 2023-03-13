@@ -109,6 +109,15 @@ namespace MaslowsMain
                 if (value.ToString().Split(':')[1].Equals("Close"))
                     _cs.CloseRelays();
             }
+            if (value.ToString().Equals("WakeSystem"))
+            {
+                try
+                {
+                    _cs.WakeSystem();
+                    _cs.logger.WriteLine("Wake System Method Called Successfully");
+                }
+                catch(Exception e) { _cs.logger.WriteLine("Problem Calling WakeSystem Method"); }
+            }
         }
     }
 }

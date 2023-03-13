@@ -60,12 +60,28 @@ namespace MaslowsMain
             currentRoom.SourceSelectedEvent += OnSourceSelected;
             currentRoom.RoomTVConnectedEvent += CurrentRoom_RoomTVConnectedEvent;
             currentRoom.RoomVolChangedEvent += CurrentRoom_RoomVolChangedEvent;
+            currentRoom.RoomsJoinedEvent += CurrentRoom_RoomsJoinedEvent;
+            currentRoom.SlaveModeEvent += CurrentRoom_SlaveModeEvent;
         }
+
         void UnsubscribeFromRoomEvents()
         {
             currentRoom.SourceSelectedEvent -= OnSourceSelected;
             currentRoom.RoomTVConnectedEvent -= CurrentRoom_RoomTVConnectedEvent;
             currentRoom.RoomVolChangedEvent -= CurrentRoom_RoomVolChangedEvent;
+            currentRoom.RoomsJoinedEvent -= CurrentRoom_RoomsJoinedEvent;
+            currentRoom.SlaveModeEvent -= CurrentRoom_SlaveModeEvent;
+        }
+
+        private void CurrentRoom_RoomsJoinedEvent(bool state)
+        {
+            CommsServer.SetIndirectTextSignal(1, "JoinedState " + state);
+            CommsServer.SetIndirectTextSignal(1, "MasterPanel " + state);
+        }
+
+        private void CurrentRoom_SlaveModeEvent(bool state)
+        {
+            CommsServer.SetIndirectTextSignal(1, "SlavePanel " + state);
         }
 
         void CurrentRoom_RoomVolChangedEvent(int volLevel)
@@ -133,7 +149,8 @@ namespace MaslowsMain
         }
         void SendNeihbourRoom()
         {
-            CommsServer.SetIndirectTextSignal(1, "NeighbourRoom " + currentRoom.GetNeighbourRoom());
+            CommsServer.SetIndirectTextSignal(1, "NeighbourRoom " + currentRoom.GetNeighbourRoom() + ":" + 
+                controlSystem.rooms[currentRoom.GetNeighbourRoom()].GetRoomName());
         }
 
         void OnClientConnected(ushort state)
@@ -229,6 +246,9 @@ namespace MaslowsMain
                 else if (incomingRequest.Contains("GetSourceSelected")) SendSourceSelected();
                 else if (incomingRequest.Contains("GetNeighbourRoom")) SendNeihbourRoom();
                 else if (incomingRequest.Contains("GetVolumeLevel")) CommsServer.SetIndirectTextSignal(1, "Volume " + currentRoom.GetRoomVolLevel());
+                else if (incomingRequest.Contains("GetJoinedState")) CommsServer.SetIndirectTextSignal(1, "JoinedState " + currentRoom.GetJoinedState());
+                else if (incomingRequest.Contains("MasterPanel")) CommsServer.SetIndirectTextSignal(1, "MasterPanel " + currentRoom.GetMasterPanel());
+                else if (incomingRequest.Contains("SlavePanel")) CommsServer.SetIndirectTextSignal(1, "SlavePanel " + currentRoom.GetSlavePanel());
                 else if (incomingRequest.Contains("SetSourceSelected")) currentRoom.SetSourceSelected(short.Parse(incomingRequest.Split(':')[1]));
                 else if (incomingRequest.Contains("RoomChange"))
                 {
@@ -257,6 +277,8 @@ namespace MaslowsMain
                     else if (incomingRequest.Split(':')[1].Equals("-"))
                         currentRoom.VolDown();
                 }
+                else if (incomingRequest.Contains("JoinRooms")) currentRoom.JoinRooms();
+                else if (incomingRequest.Contains("SeperateRooms")) currentRoom.SeperateRooms();
             }
             catch (Exception ex)
             {

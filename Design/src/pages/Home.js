@@ -42,8 +42,8 @@ function InitializeHomeVariables()
     
     const timeNow = new Date();
     if(
-        (timeNow.getHours() >= 20 && timeNow.getMinutes() >= 30) ||
-        timeNow.getHours() > 20 ||
+        (timeNow.getHours() >= 10 && timeNow.getMinutes() >= 30) ||
+        timeNow.getHours() > 10 ||
         timeNow.getHours() <= 6
     )
     {
@@ -92,6 +92,7 @@ function InitializeHomeVariables()
         //else
           //  connStatus('iptvStatus', 'red', iptvConnStatus);
     }
+    ProcessNeighbourRoom(neighbourRoom);
 
     homePageInitialized = true;
 }
@@ -138,8 +139,8 @@ function AddSourcesToInterface()
 
     const timeNow = new Date();
     if(
-    (timeNow.getHours() >= 20 && timeNow.getMinutes() >= 30) ||
-    timeNow.getHours() > 20 ||
+    (timeNow.getHours() >= 10 && timeNow.getMinutes() >= 30) ||
+    timeNow.getHours() > 10 ||
     timeNow.getHours() <= 6
     )
     {
@@ -165,8 +166,8 @@ function PopulateInterface()
   {
     const timeNow = new Date();
     if(
-    (timeNow.getHours() >= 20 && timeNow.getMinutes() >= 30) ||
-    timeNow.getHours() > 20 ||
+    (timeNow.getHours() >= 10 && timeNow.getMinutes() >= 30) ||
+    timeNow.getHours() > 10 ||
     timeNow.getHours() <= 6
     )
     {
@@ -297,19 +298,29 @@ function ProcessNeighbourRoom(neighbourRoom)
 {
     if(parseInt(neighbourRoom) > -1)
     {
-        let roomNameContainer = document.getElementById("roomNameContainer");
-        let swipeMessage = "<< Swipe left for other Room"
+        let projectBottom = document.getElementById("projectBottom");
+        let settingsButton = document.createElement("div");
+        settingsButton.id = "settingsButton"
+        settingsButton.classList.add('centered', 'fa-solid', 'fa-gear', 'fa-4x')
         
-        let nextRoomMessage = document.createElement("div")
-        nextRoomMessage.innerHTML = swipeMessage;
-        nextRoomMessage.style.fontSize = "24px"
+        projectBottom.appendChild(settingsButton);
+        document.getElementById("settingsButton").addEventListener('touchend', function(){
+            openSubpage("Settings");
+        })
+        if(JoinedState)
+        {
+            
+        }
+        //let nextRoomMessage = document.createElement("div")
+        //nextRoomMessage.innerHTML = swipeMessage;
+        //nextRoomMessage.style.fontSize = "24px"
 
-        roomNameContainer.appendChild(nextRoomMessage);
+        //roomNameContainer.appendChild(nextRoomMessage);
 
         nextRoom = parseInt(neighbourRoom);
     }
-    if(currentSubpage == "Home")
+    else
     {
-        InitializeHomeVariables()
+        document.getElementById("volumeControlsContainer").style.marginLeft = "0px"
     }
 }

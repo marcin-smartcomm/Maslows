@@ -1,0 +1,142 @@
+#subpageTopControls
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 10%;
+}
+
+.join-seperate-button
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    box-shadow: 5px 5px rgba(0,0,0,0.2);
+    height: 100%;
+    width: 50%;
+    font-size: 24px;
+}
+
+#joinedInfoText
+{
+    font-size: 24px;
+}
+
+#joinedWithText
+{
+    color: rgb(0, 255, 0);
+}
+
+.join-seperate-button:active
+{
+    font-size: 20px;
+}
+
+#returnBtn
+{
+    margin-right: 60px;
+}
+
+#room1Box
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid black;
+    width: 80%;
+    min-height: 40%;
+    font-size: 36px;
+    text-align: center;
+}
+
+#room2Box
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid black;
+    width: 80%;
+    min-height: 40%;
+    font-size: 36px;
+    text-align: center;
+}
+
+.joinedTop
+{
+    animation: joinTopAnimation 1s forwards;
+}
+
+.joinedBottom
+{
+    animation: joinBottomAnimation 1s forwards;
+}
+
+.seperateTop
+{
+    animation: seperateTopAnimation 1s forwards;
+}
+
+.seperateBottom
+{
+    animation: seperateBottomAnimation 1s forwards;
+}
+
+@keyframes joinTopAnimation
+{
+    from{
+        border-top: 2px solid black;
+    }
+    to{
+        border-top: 2px solid white;
+        border-bottom: 2px solid rgb(0, 255, 0);
+        border-left: 2px solid rgb(0, 255, 0);
+        border-right: 2px solid rgb(0, 255, 0);
+    }
+}
+
+@keyframes joinBottomAnimation
+{
+    from{
+        border-bottom: 2px solid black;
+    }
+    to{
+        border-bottom: 2px solid white;
+        border-top: 2px solid rgb(0, 255, 0);
+        border-left: 2px solid rgb(0, 255, 0);
+        border-right: 2px solid rgb(0, 255, 0);
+    }
+}
+
+@keyframes seperateTopAnimation
+{
+    from{
+        border-top: 2px solid white;
+        border-bottom: 2px solid rgb(0, 255, 0);
+        border-left: 2px solid rgb(0, 255, 0);
+        border-right: 2px solid rgb(0, 255, 0);
+    }
+    to{
+        border-top: 2px solid black;
+        border-bottom: 2px solid white;
+        border-left: 2px solid white;
+        border-right: 2px solid white;
+    }
+}
+
+@keyframes seperateBottomAnimation
+{
+    from{
+        border-bottom: 2px solid white;
+        border-top: 2px solid rgb(0, 255, 0);
+        border-left: 2px solid rgb(0, 255, 0);
+        border-right: 2px solid rgb(0, 255, 0);
+    }
+    to{
+        border-bottom: 2px solid black;
+        border-top: 2px solid white;
+        border-left: 2px solid white;
+        border-right: 2px solid white;
+    }
+}

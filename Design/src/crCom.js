@@ -72,6 +72,9 @@ function RequestRoomData()
     sendMessage("GetSourceSelected");
     sendMessage("GetNeighbourRoom");
     sendMessage("GetVolumeLevel");
+    sendMessage("GetJoinedState");
+    sendMessage("MasterPanel");
+    sendMessage("SlavePanel");
 }
 
 function sendMessage(message)
@@ -120,7 +123,12 @@ function pong() {
     clearTimeout(tm);
 }
 
+let CurrentRoomName = "";
 let neighbourRoom = "";
+let neighbourRoomName = "";
+let JoinedState = false;
+let MasterPanel = false;
+let SlavePanel = false;
 let interval;
 
 function onMessage(e) {
@@ -134,6 +142,7 @@ function onMessage(e) {
     else if(value.includes("RoomName"))
     {
         let roomName = value.replace('RoomName ', '');
+        CurrentRoomName = roomName;
 
         //in app.js
         FilRoomName(roomName);
@@ -155,10 +164,45 @@ function onMessage(e) {
     }
     else if(value.includes("NeighbourRoom"))
     {
-        neighbourRoom = value.replace('NeighbourRoom ', '');
+        let neighbourRoomValues = value.replace('NeighbourRoom ', '')
+        neighbourRoomValues = neighbourRoomValues.split(':');
+        neighbourRoom = neighbourRoomValues[0];
+        neighbourRoomName = neighbourRoomValues[1];
+    }
+    else if(value.includes("JoinedState"))
+    {
+        let joinedStateRaw = value.replace('JoinedState ', '')
+        if(joinedStateRaw == "False")
+            JoinedState = false;
+        else
+            JoinedState = true;
 
-        //in Home.js
-        ProcessNeighbourRoom(neighbourRoom);
+        //in app.js
+        joinedStateChanged();
+
+        if(currentSubpage == "Settings")
+        {
+            // in Settings.js
+            updateJoinedState();
+        }
+    }
+    else if(value.includes("MasterPanel"))
+    {
+        let masterPanelRaw = value.replace('MasterPanel ', '')
+        if(masterPanelRaw == "False")
+            MasterPanel = false;
+        else
+            MasterPanel = true;
+    }
+    else if(value.includes("SlavePanel"))
+    {
+        let slavePanelRaw = value.replace('SlavePanel ', '')
+        if(slavePanelRaw == "False")
+            SlavePanel = false;
+        else
+            SlavePanel = true;
+
+        openSubpage("ScreenSaver")
     }
     else if(value.includes("RoomSelected"))
     {

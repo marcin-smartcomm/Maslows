@@ -5,7 +5,10 @@
     "Wireless",
     "TV"
   ],
-  "sourceSelected": -1,
-  "neighbourRoom": -1,
+  "sourceSelected": 1,
+  "neighbourRoom": 6,
+  "joined": false,
+  "MasterPanel": false,
+  "slave": false,
   "volume": 50
 }

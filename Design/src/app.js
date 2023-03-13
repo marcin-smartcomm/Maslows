@@ -19,6 +19,32 @@ document.getElementById("projectTop").addEventListener('touchend', e => {
   checkDirection()
 })
 
+function joinedStateChanged()
+{
+  if(JoinedState)
+  {
+    console.log("dupa")
+    let roomNameContainer = document.getElementById("roomNameContainer")
+    let joinedInfoText;
+    joinedInfoText = document.createElement("div")
+    joinedInfoText.id = "joinedInfoText";
+    joinedInfoText.innerHTML = "<span id=\"joinedWithText\">Joined with:</span> " + neighbourRoomName;
+  
+    roomNameContainer.appendChild(joinedInfoText);
+  }
+  else
+  {
+    try
+    {
+      document.getElementById("joinedInfoText").remove();
+    }
+    catch(ex)
+    {
+      console.log(ex);
+    }
+  }
+}
+
 function FilRoomName(roomName)
 {
   let roomNameContainer = document.getElementById("roomNameContainer")
@@ -77,13 +103,13 @@ function PanelBoot()
 }
     
 function checkDirection() {
-  if(parseInt(neighbourRoom) > -1)
-  {
-    if (touchendX < touchstartX)
-    {
-      homePageInitialized = false;
-      sendMessage('DisconnectEquipment');
-      sendMessage(`RoomChange:${nextRoom}`);
-    }
-  }
+  //if(parseInt(neighbourRoom) > -1)
+  //{
+  //  if (touchendX < touchstartX)
+  //  {
+  //    homePageInitialized = false;
+  //    sendMessage('DisconnectEquipment');
+  //    sendMessage(`RoomChange:${nextRoom}`);
+  //  }
+  //}
 }

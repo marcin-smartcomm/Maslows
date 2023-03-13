@@ -278,8 +278,7 @@ namespace MaslowsMain
                     {
                         if(_SimplWindowsComms.StringOutput[1].StringValue.Equals("WakeSystem"))
                         {
-                            foreach (Room room in rooms)
-                                room.SetSourceSelected(1);
+                            WakeSystem();
                         }
                     }
                     else
@@ -291,9 +290,20 @@ namespace MaslowsMain
             }
         }
 
+        public void WakeSystem()
+        {
+            foreach (Room room in rooms)
+            {
+                if (room.GetSources().Length > 1)
+                    room.SetSourceSelected(1);
+                else
+                    room.SetSourceSelected(0);
+            }
+        }
+
         public void SendMessage(string message)
         {
-            _SimplWindowsComms.StringInput[1].StringValue = message;
+            //_SimplWindowsComms.StringInput[1].StringValue = message;
         }
 
         void _ControllerEthernetEventHandler(EthernetEventArgs ethernetEventArgs)
