@@ -2,6 +2,7 @@
 using Crestron.SimplSharpPro.DeviceSupport;
 using Crestron.SimplSharpPro.UI;
 using Independentsoft.Exchange;
+using System;
 using System.Collections.Generic;
 
 namespace MaslowsMain
@@ -130,6 +131,16 @@ namespace MaslowsMain
                         if (args.Sig.Number == 42) if (args.Sig.BoolValue == true) _roomList[currentRoom].SetSourceSelected(2);
                         if (args.Sig.Number == 43) if (args.Sig.BoolValue == true) _roomList[currentRoom].SetSourceSelected(-1);
                         if (args.Sig.Number == 44) if (args.Sig.BoolValue == true) _roomList[currentRoom].SetSourceSelected(3);
+                        if (args.Sig.Number == 51) if (args.Sig.BoolValue == true)
+                        {
+                            _iPad.BooleanInput[50].BoolValue = false;
+                            _iPad.BooleanInput[52].BoolValue = true;
+                        }
+                        if (args.Sig.Number == 53) if (args.Sig.BoolValue == true)
+                        {
+                            _iPad.BooleanInput[50].BoolValue = true;
+                            _iPad.BooleanInput[52].BoolValue = false;
+                        }
 
                         CheckSourcePresses(args);
                             break;
@@ -239,7 +250,7 @@ namespace MaslowsMain
 
             string[] roomSources = _roomList[currentRoom].GetSources();
 
-            if (roomSources[source] == "IPTV")
+            if (roomSources[source] == "TV")
                 _iPad.BooleanInput[50].BoolValue = true;
             else
                 _iPad.BooleanInput[50].BoolValue = false;
@@ -256,6 +267,8 @@ namespace MaslowsMain
 
         void CheckSourcePresses(SigEventArgs args)
         {
+            //IPTV IPTV
+
             if (args.Sig.Number == 200) if (args.Sig.BoolValue == true) _roomList[currentRoom].SourceBtnPressed(7);
             if (args.Sig.Number == 201) if (args.Sig.BoolValue == true) _roomList[currentRoom].SourceBtnPressed(8);
             if (args.Sig.Number == 202) if (args.Sig.BoolValue == true) _roomList[currentRoom].SourceBtnPressed(111);
@@ -299,6 +312,43 @@ namespace MaslowsMain
             if (args.Sig.Number == 229) if (args.Sig.BoolValue == true) _roomList[currentRoom].SourceBtnPressed(111);
             if (args.Sig.Number == 230) if (args.Sig.BoolValue == true) _roomList[currentRoom].SourceBtnPressed(111);
             if (args.Sig.Number == 231) if (args.Sig.BoolValue == true) _roomList[currentRoom].SourceBtnPressed(111);
+
+            //SKY SKY
+
+            if (args.Sig.Number == 300) if (args.Sig.BoolValue == true) _cs.PushSky1Button(8);
+            if (args.Sig.Number == 301) if (args.Sig.BoolValue == true) _cs.PushSky1Button(7);
+
+            if (args.Sig.Number == 302) if (args.Sig.BoolValue == true) _cs.PushSky1Button(19);
+            if (args.Sig.Number == 303) if (args.Sig.BoolValue == true) _cs.PushSky1Button(20);
+            if (args.Sig.Number == 304) if (args.Sig.BoolValue == true) _cs.PushSky1Button(21);
+            if (args.Sig.Number == 305) if (args.Sig.BoolValue == true) _cs.PushSky1Button(22);
+
+            if (args.Sig.Number == 307) if (args.Sig.BoolValue == true) _cs.PushSky1Button(25);
+            if (args.Sig.Number == 308) if (args.Sig.BoolValue == true) _cs.PushSky1Button(26);
+            if (args.Sig.Number == 309) if (args.Sig.BoolValue == true) _cs.PushSky1Button(29);
+            if (args.Sig.Number == 311) if (args.Sig.BoolValue == true) _cs.PushSky1Button(28);
+
+            if (args.Sig.Number == 312) if (args.Sig.BoolValue == true) _cs.PushSky1Button(5);
+            if (args.Sig.Number == 313) if (args.Sig.BoolValue == true) _cs.PushSky1Button(6);
+
+            if (args.Sig.Number == 314) if (args.Sig.BoolValue == true) _cs.PushSky1Button(0);
+            if (args.Sig.Number == 315) if (args.Sig.BoolValue == true) _cs.PushSky1Button(4);
+            if (args.Sig.Number == 316) if (args.Sig.BoolValue == true) _cs.PushSky1Button(1);
+            if (args.Sig.Number == 317) if (args.Sig.BoolValue == true) _cs.PushSky1Button(3);
+            if (args.Sig.Number == 318) if (args.Sig.BoolValue == true) _cs.PushSky1Button(2);
+
+            if (args.Sig.Number == 319) if (args.Sig.BoolValue == true) _cs.PushSky1Button(9);
+            if (args.Sig.Number == 320) if (args.Sig.BoolValue == true) _cs.PushSky1Button(10);
+            if (args.Sig.Number == 321) if (args.Sig.BoolValue == true) _cs.PushSky1Button(11);
+            if (args.Sig.Number == 322) if (args.Sig.BoolValue == true) _cs.PushSky1Button(12);
+            if (args.Sig.Number == 323) if (args.Sig.BoolValue == true) _cs.PushSky1Button(13);
+            if (args.Sig.Number == 324) if (args.Sig.BoolValue == true) _cs.PushSky1Button(14);
+            if (args.Sig.Number == 325) if (args.Sig.BoolValue == true) _cs.PushSky1Button(15);
+            if (args.Sig.Number == 326) if (args.Sig.BoolValue == true) _cs.PushSky1Button(16);
+            if (args.Sig.Number == 327) if (args.Sig.BoolValue == true) _cs.PushSky1Button(17);
+            if (args.Sig.Number == 328) if (args.Sig.BoolValue == true) _cs.PushSky1Button(18);
+
+            if (args.Sig.Number == 329) if (args.Sig.BoolValue == true) _cs.PushSky1Button(30);
         }
     }
 }

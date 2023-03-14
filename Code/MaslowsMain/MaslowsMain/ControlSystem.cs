@@ -115,17 +115,17 @@ namespace MaslowsMain
                 iptvs = new IPTV[11];
                 TVs = new LGTV[11];
 
-                iptvs[0] = new IPTV("10.10.10.130", 7070, "iptv1", this);
-                iptvs[1] = new IPTV("10.10.10.123", 7070, "iptv2", this);
-                iptvs[2] = new IPTV("10.10.10.120", 7070, "iptv3", this);
-                iptvs[3] = new IPTV("10.10.10.124", 7070, "iptv4", this);
-                iptvs[4] = new IPTV("10.10.10.125", 7070, "iptv5", this);
+                iptvs[0] = new IPTV("10.10.10.58", 7070, "iptv1", this);
+                iptvs[1] = new IPTV("10.10.10.57", 7070, "iptv2", this);
+                iptvs[2] = new IPTV("10.10.10.55", 7070, "iptv3", this);
+                iptvs[3] = new IPTV("10.10.10.51", 7070, "iptv4", this);
+                iptvs[4] = new IPTV("10.10.10.56", 7070, "iptv5", this);
                 iptvs[5] = new IPTV("10.10.10.50", 7070, "iptv6", this);
-                iptvs[6] = new IPTV("10.10.10.131", 7070, "iptv7", this);
-                iptvs[7] = new IPTV("10.10.10.122", 7070, "iptv8", this);
-                iptvs[8] = new IPTV("10.10.10.127", 7070, "iptv9", this);
-                iptvs[9] = new IPTV("10.10.10.132", 7070, "iptv10", this);
-                iptvs[10] = new IPTV("10.10.10.126", 7070, "iptv11", this);
+                iptvs[6] = new IPTV("10.10.10.60", 7070, "iptv7", this);
+                iptvs[7] = new IPTV("10.10.10.59", 7070, "iptv8", this);
+                iptvs[8] = new IPTV("10.10.10.54", 7070, "iptv9", this);
+                iptvs[9] = new IPTV("10.10.10.53", 7070, "iptv10", this);
+                iptvs[10] = new IPTV("10.10.10.52", 7070, "iptv11", this);
 
                 TVs[0] = new LGTV(this, "TV1", "172.16.30.80", 9761, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
                 TVs[1] = new LGTV(this, "TV2", "172.16.30.81", 9761, new byte[] { 0x74, 0xE6, 0xB8, 0x4F, 0x60, 0x98 });
@@ -295,15 +295,13 @@ namespace MaslowsMain
             foreach (Room room in rooms)
             {
                 if (room.GetSources().Length > 1)
-                    room.SetSourceSelected(1);
-                else
                     room.SetSourceSelected(0);
             }
         }
 
         public void SendMessage(string message)
         {
-            //_SimplWindowsComms.StringInput[1].StringValue = message;
+            _SimplWindowsComms.StringInput[1].StringValue = message;
         }
 
         void _ControllerEthernetEventHandler(EthernetEventArgs ethernetEventArgs)

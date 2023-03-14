@@ -1,8 +1,7 @@
 {
   "roomName": "Meeting Room 301",
   "sources": [
-    "Laptop",
-    "Wireless",
+    "Collaborate",
     "TV"
   ],
   "sourceSelected": -1,

@@ -42,8 +42,8 @@ function InitializeHomeVariables()
     
     const timeNow = new Date();
     if(
-        (timeNow.getHours() >= 10 && timeNow.getMinutes() >= 30) ||
-        timeNow.getHours() > 10 ||
+        (timeNow.getHours() >= 20 && timeNow.getMinutes() >= 30) ||
+        timeNow.getHours() > 20 ||
         timeNow.getHours() <= 6
     )
     {
@@ -139,8 +139,8 @@ function AddSourcesToInterface()
 
     const timeNow = new Date();
     if(
-    (timeNow.getHours() >= 10 && timeNow.getMinutes() >= 30) ||
-    timeNow.getHours() > 10 ||
+    (timeNow.getHours() >= 20 && timeNow.getMinutes() >= 30) ||
+    timeNow.getHours() > 20 ||
     timeNow.getHours() <= 6
     )
     {
@@ -166,8 +166,8 @@ function PopulateInterface()
   {
     const timeNow = new Date();
     if(
-    (timeNow.getHours() >= 10 && timeNow.getMinutes() >= 30) ||
-    timeNow.getHours() > 10 ||
+    (timeNow.getHours() >= 20 && timeNow.getMinutes() >= 30) ||
+    timeNow.getHours() > 20 ||
     timeNow.getHours() <= 6
     )
     {

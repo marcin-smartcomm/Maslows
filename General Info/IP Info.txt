@@ -8,14 +8,14 @@ TSW 2.16 - 172.16.30.106
 TSW 2.14 - 172.16.30.107
 
 BluStream 5.11 - 172.16.30.60
-BluStream 4.17 - 172.16.30.61
+BluStream 4.17 - 172.16.30.61 (HDCP Off)
 BluStream 4.16 - 
-BluStream 3.18 - 172.16.30.63
+BluStream 3.18 - 172.16.30.63 (HDCP Off)
 BluStream 3.17 - 
-BluStream 2.17 - 172.16.30.65
+BluStream 2.17 - 172.16.30.65 (HDCP Off)
 BluStream 2.16 - 172.16.30.66
-BluStream 2.15 - 172.16.30.67
-BluStream 2.14 - 172.16.30.68
+BluStream 2.15 - 172.16.30.67 (HDCP Off)
+BluStream 2.14 - 172.16.30.68 (HDCP Off)
 BluStream L1 Event Space - 
 BluStream L1 Private Dining - 
 

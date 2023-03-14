@@ -116,7 +116,7 @@ namespace MaslowsMain
                     _cs.WakeSystem();
                     _cs.logger.WriteLine("Wake System Method Called Successfully");
                 }
-                catch(Exception e) { _cs.logger.WriteLine("Problem Calling WakeSystem Method"); }
+                catch(Exception e) { _cs.logger.WriteLine("Problem Calling WakeSystem Method: " + e.ToString()); }
             }
         }
     }

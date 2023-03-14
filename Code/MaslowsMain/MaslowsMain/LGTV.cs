@@ -20,6 +20,7 @@ namespace MaslowsMain
 
         public event Action<bool> TVConnectedEvent;
         public event Action<int> VolChangeEvent;
+        public event Action<bool> TVSelectedEvent;
 
         public LGTV(ControlSystem cs, string name, string ipAddr, int port, byte[] macAddr)
         {
@@ -59,6 +60,12 @@ namespace MaslowsMain
                 this.VolChangeEvent(volLevel);
         }
 
+        void OnTVSelectedEvent(bool state)
+        {
+            if (this.TVSelectedEvent != null)
+                this.TVSelectedEvent(state);
+        }
+
         public int GetVolumeLevel() => volLevel;
         public void PowerOn()
         {
@@ -96,6 +103,14 @@ namespace MaslowsMain
 
         public void SourceSelectedChanged(string source)
         {
+            if(!source.Equals("Off"))
+            {
+                Task.Run(() =>
+                {
+                    Thread.Sleep(1000);
+                    PowerOn();
+                });
+            }
             _cs.logger.WriteLine(TVName + ": Changing source to " + source);
 
             bool wasOff = false;
@@ -116,10 +131,11 @@ namespace MaslowsMain
             if(source.Equals("IPTV") || source.Equals("TV"))
             {
                 _cs.SendMessage(TVName + ":HDMI1");
+                OnTVSelectedEvent(true);
             }
-            else if (source.Equals("Laptop") || source.Equals("Wireless"))
+            else if (source.Equals("Laptop") || source.Equals("Wireless") || source.Equals("Collaborate"))
             {
-                _cs.SendMessage(TVName + ":" + source);
+                _cs.SendMessage(TVName + ":Laptop");
             }
             else if (source.Equals("Sky"))
             {

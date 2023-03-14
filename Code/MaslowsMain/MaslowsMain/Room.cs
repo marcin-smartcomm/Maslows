@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace MaslowsMain
@@ -28,6 +30,7 @@ namespace MaslowsMain
             this.lgtv = lgtv;
             lgtv.TVConnectedEvent += Lgtv_TVConnectedEvent;
             lgtv.VolChangeEvent += Lgtv_VolChangeEvent;
+            lgtv.TVSelectedEvent += Lgtv_TVSelectedEvent;
 
             try
             {
@@ -43,6 +46,17 @@ namespace MaslowsMain
             {
                 _cs.logger.WriteLine("Problem in Room" + _roomID + " Constructor " + ex);
             }
+        }
+
+        private void Lgtv_TVSelectedEvent(bool obj)
+        {
+            Task.Run(() =>
+            {
+                Thread.Sleep(500);
+                iptv.PushButton(10);
+                Thread.Sleep(1000);
+                iptv.PushButton(15);
+            });
         }
 
         void Lgtv_VolChangeEvent(int volLevel)
@@ -116,7 +130,7 @@ namespace MaslowsMain
                     _settings.sourceSelected = value;
                     FileOperations.UpdateSettings(_roomID.ToString(), _settings);
 
-                    if(!_settings.slave)
+                    if(!_settings.slave && _settings.joined)
                     {
                         if(value == -1)
                         {
@@ -145,11 +159,17 @@ namespace MaslowsMain
         }
         public void SourceBtnPressed(int btnPressed)
         {
-            if (_settings.sources[_settings.sourceSelected] == "IPTV")
+            if (_settings.sources[_settings.sourceSelected] == "TV")
             {
-                iptv.PushButton(btnPressed);
-                if(!_settings.slave)
-                    _cs.rooms[_settings.neighbourRoom].SourceBtnPressed(btnPressed);
+                try
+                {
+                    iptv.PushButton(btnPressed);
+                    if (!_settings.slave && _settings.joined)
+                        _cs.rooms[_settings.neighbourRoom].SourceBtnPressed(btnPressed);
+                }catch(Exception ex)
+                {
+                    _cs.logger.WriteLine("Problem in Room.SourceBtnPressed: " + ex.ToString());
+                }
             }
             if(_settings.sources[_settings.sourceSelected] == "Sky")
             {
@@ -159,13 +179,13 @@ namespace MaslowsMain
         public void VolUp()
         {
             lgtv.VolUp();
-            if (!_settings.slave)
+            if (!_settings.slave && _settings.joined)
                 _cs.rooms[_settings.neighbourRoom].VolUp();
         }
         public void VolDown()
         {
             lgtv.VolDown();
-            if (!_settings.slave)
+            if (!_settings.slave && _settings.joined)
                 _cs.rooms[_settings.neighbourRoom].VolDown();
         }
 

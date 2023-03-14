@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace MaslowsMain
 {
@@ -19,6 +20,12 @@ namespace MaslowsMain
             this.name = name;
             _IPADDRESS = ipAddr;
             _PORT = port.ToString();
+
+            //initiate comms
+            Task.Run(() =>
+            {
+                PushButton(0);
+            });
         }
 
         public void PushButton(int btnPressed)
@@ -106,25 +113,36 @@ namespace MaslowsMain
                     break;
             }
 
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://" + _IPADDRESS + ":" + _PORT + "/api/action");
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
-
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            try
             {
-                string json = "{\"sender\": \"Web Application Client v2\",\"command\":{\"type\":\"System.Action\",\"text\":\"PressKey\",\"value\":\"" + btnCodeToSend + "\"}}";
+                Task.Run(() =>
+                {
+                    cs.logger.WriteLine("Trying to send a command to " + name);
+                    var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://" + _IPADDRESS + ":" + _PORT + "/api/action");
+                    httpWebRequest.ContentType = "application/json";
+                    httpWebRequest.Method = "POST";
+                    httpWebRequest.Timeout = 100;
 
-                streamWriter.Write(json);
-                cs.logger.WriteLine("IPTV IP: " + _IPADDRESS + ", IPTV Port: " + _PORT + ", Sending message: " + json.Replace("{", "(").Replace("}", ")"));
+                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                    {
+                        string json = "{\"sender\": \"Web Application Client v2\",\"command\":{\"type\":\"System.Action\",\"text\":\"PressKey\",\"value\":\"" + btnCodeToSend + "\"}}";
+
+                        streamWriter.Write(json);
+                    }
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        result = result.Replace('{', '(');
+                        result = result.Replace('}', ')');
+                        cs.logger.WriteLine("Received Response from " + name + ": " + result.ToString());
+                    }
+                    cs.logger.WriteLine("Command sent");
+                });
             }
-
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            catch (Exception ex)
             {
-                var result = streamReader.ReadToEnd();
-                result = result.Replace('{', '(');
-                result = result.Replace('}', ')');
-                cs.logger.WriteLine(result.ToString());
+                cs.logger.WriteLine(ex.ToString());
             }
         }
     }
