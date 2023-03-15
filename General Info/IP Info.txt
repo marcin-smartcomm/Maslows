@@ -27,6 +27,6 @@ TV 3.17 - 172.16.30.84
 TV 2.17 - 172.16.30.85
 TV 2.16 - 172.16.30.86
 TV 2.15 - 172.16.30.87
-TV 2.14 - 172.16.30.88
+TV 2.14 - DHCP because Mersive stole this IP address
 TV L1 Event Space - 172.16.30.89
 TV L1 Private Dining - 172.16.30.90

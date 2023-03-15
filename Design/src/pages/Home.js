@@ -60,12 +60,27 @@ function InitializeHomeVariables()
     }
 
     //Initialize Footer
-    document.getElementById("volUpBtn").addEventListener('click', function()
+    document.getElementById("volUpBtn").addEventListener('touchstart', function()
     {
+        document.getElementById("volUpBtn").classList.remove("vol-btn-unpressed")
+        document.getElementById("volUpBtn").classList.add("vol-btn-pressed")
+    })
+    document.getElementById("volUpBtn").addEventListener('touchend', function()
+    {
+        document.getElementById("volUpBtn").classList.remove("vol-btn-pressed")
+        document.getElementById("volUpBtn").classList.add("vol-btn-unpressed")
         sendMessage("Volume:+");
     })
-    document.getElementById("volDownBtn").addEventListener('click', function()
+
+    document.getElementById("volDownBtn").addEventListener('touchstart', function()
     {
+        document.getElementById("volDownBtn").classList.remove("vol-btn-unpressed")
+        document.getElementById("volDownBtn").classList.add("vol-btn-pressed")
+    })
+    document.getElementById("volDownBtn").addEventListener('touchend', function()
+    {
+        document.getElementById("volDownBtn").classList.add("vol-btn-unpressed")
+        document.getElementById("volDownBtn").classList.remove("vol-btn-pressed")
         sendMessage("Volume:-");
     })
     volLabel = document.getElementById("volLabel");

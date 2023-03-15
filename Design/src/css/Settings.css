@@ -15,8 +15,13 @@
     border-radius: 5px;
     box-shadow: 5px 5px rgba(0,0,0,0.2);
     height: 100%;
-    width: 50%;
+    min-width: 185px;
     font-size: 24px;
+}
+
+.join-seperate-button:active
+{
+    font-size: 20px;
 }
 
 #joinedInfoText
@@ -29,11 +34,6 @@
     color: rgb(0, 255, 0);
 }
 
-.join-seperate-button:active
-{
-    font-size: 20px;
-}
-
 #returnBtn
 {
     margin-right: 60px;
@@ -44,8 +44,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border-bottom: 1px solid black;
-    width: 80%;
+    border-bottom: 2px solid black;
+    width: 290px;
     min-height: 40%;
     font-size: 36px;
     text-align: center;
@@ -56,31 +56,31 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border-top: 1px solid black;
-    width: 80%;
-    min-height: 40%;
+    border-top: 2px solid black;
+    width: 290px;
+    height: 40%;
     font-size: 36px;
     text-align: center;
 }
 
 .joinedTop
 {
-    animation: joinTopAnimation 1s forwards;
+    animation: joinTopAnimation 0.5s forwards;
 }
 
 .joinedBottom
 {
-    animation: joinBottomAnimation 1s forwards;
+    animation: joinBottomAnimation 0.5s forwards;
 }
 
 .seperateTop
 {
-    animation: seperateTopAnimation 1s forwards;
+    animation: seperateTopAnimation 0.5s forwards;
 }
 
 .seperateBottom
 {
-    animation: seperateBottomAnimation 1s forwards;
+    animation: seperateBottomAnimation 0.5s forwards;
 }
 
 @keyframes joinTopAnimation

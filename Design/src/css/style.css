@@ -115,11 +115,27 @@ footer
   background-color: rgba(255, 255, 255);
 }
 
+/*
 .vol-btn:active
 {
   font-size: 18px;
   background-color: black;
   color: white;
+}
+*/
+
+.vol-btn-pressed
+{
+  font-size: 18px;
+  background-color: black;
+  color: white;
+}
+
+.vol-btn-unpressed
+{
+  font-size: 20px;
+  background-color: rgba(255, 255, 255);
+  color: black;
 }
 
 #volLabel
