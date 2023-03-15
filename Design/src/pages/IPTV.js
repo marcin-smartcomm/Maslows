@@ -12,7 +12,14 @@ function InitializeIPTVVariables()
     })
   }
 
+  document.getElementById("channelSelect").addEventListener('click', function()
+  {
+    openSubpage("IPTVNumpad");
+    InitializeIPTVNumpad();
+  })
+
 //swipe read
+/*
   document.getElementById("iptvSubpageSection").addEventListener('touchstart', e => {
     IPTVtouchstartX = e.changedTouches[0].screenX
   })
@@ -22,6 +29,7 @@ function InitializeIPTVVariables()
   
     IPTVcheckDirection()
   })
+  */
 }
 
 
@@ -38,7 +46,13 @@ function InitializeIPTVNumpad()
     })
   }
 
+  document.getElementById("channelSelect").addEventListener('click', function()
+  {
+    openSubpage("TV");
+  })
+
 //swipe read
+/*
   document.getElementById("iptvSubpageSection").addEventListener('touchstart', e => {
     IPTVtouchstartX = e.changedTouches[0].screenX
   })
@@ -48,9 +62,11 @@ function InitializeIPTVNumpad()
   
     IPTVcheckDirection()
   })
+  */
 }
 
 //swipe read
+/*
 let IPTVtouchstartX = 0
 let IPTVtouchendX = 0
     
@@ -66,3 +82,4 @@ function IPTVcheckDirection() {
       openSubpage("TV");
   }
 }
+*/

@@ -1,6 +1,6 @@
 let _webSocket;
-//let webSocketServerIPAddress = "172.16.30.101"
-let webSocketServerIPAddress = "192.168.1.243"
+let webSocketServerIPAddress = "172.16.30.101"
+//let webSocketServerIPAddress = "192.168.1.243"
 
 const indexedDB = 
     window.indexedDB ||
