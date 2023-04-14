@@ -1,23 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using System.Threading.Tasks;
 using Crestron.SimplSharp;                          	// For Basic SIMPL# Classes
-using Crestron.SimplSharpPro.GeneralIO;
-using Crestron.SimplSharp.CrestronIO;
 using Crestron.SimplSharpPro;                       	// For Basic SIMPL#Pro classes
 using Crestron.SimplSharpPro.CrestronThread;            // For Threadingb
 using Crestron.SimplSharpPro.UI;
-using Crestron.SimplSharpPro.CrestronConnected;
-using Crestron.SimplSharpPro.DeviceSupport;
 using Crestron.SimplSharpPro.EthernetCommunication;
+using Crestron.SimplSharpPro.DeviceSupport;
 
 namespace MaslowsMain
 {
     public class ControlSystem : CrestronControlSystem
     {
-        MasterIpad masteriPadController;
         CrestronGo masterIPad;
         
         public List<Room> rooms;
@@ -172,7 +166,6 @@ namespace MaslowsMain
             const ushort TOUCHPANNEL_START_PORT = 50000;
 
             masterIPad = new CrestronGo(0x10, this);
-            masteriPadController = new MasterIpad(masterIPad, rooms, this, 1);
 
             tpDecider = new Touchpannel(50000, rooms[0], this);
 
@@ -269,7 +262,7 @@ namespace MaslowsMain
             }
         }
 
-        private void _SimplWindowsComms_SigChange(Crestron.SimplSharpPro.DeviceSupport.BasicTriList currentDevice, SigEventArgs args)
+        private void _SimplWindowsComms_SigChange(BasicTriList currentDevice, SigEventArgs args)
         {
             switch (args.Sig.Type)
             {

@@ -23,7 +23,6 @@ function joinedStateChanged()
 {
   if(JoinedState)
   {
-    console.log("dupa")
     let roomNameContainer = document.getElementById("roomNameContainer")
     let joinedInfoText;
     joinedInfoText = document.createElement("div")
@@ -40,7 +39,7 @@ function joinedStateChanged()
     }
     catch(ex)
     {
-      console.log(ex);
+      console.log("On Screensaver, cannot remove joined info text");
     }
   }
 }
