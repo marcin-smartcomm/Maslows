@@ -59,6 +59,14 @@ function InitializeHomeVariables()
         })
     }
 
+    //Hidden Page
+    document.getElementById("roomNameContainer").addEventListener("touchstart", function() {
+        HoldTimer();
+    })
+    document.getElementById("roomNameContainer").addEventListener("touchend", function() {
+        holding = false;
+    })
+
     //Initialize Footer
     document.getElementById("volUpBtn").addEventListener('touchstart', function()
     {
@@ -89,28 +97,46 @@ function InitializeHomeVariables()
     if(previousSubpage == "ScreenSaver") {
         ConnectRoom();
     }
-    else
-    {
-        //console.log(document.getElementById("tvStatus").innerHTML);
-        //in crCom.js
-        //if(tvConnStatus == "Connected")
-        //    connStatus('tvStatus', 'green', tvConnStatus);
-        //else if( tvConnStatus == "Trying...")
-        //    connStatus('tvStatus', 'black', tvConnStatus);
-        //else
-        //    connStatus('tvStatus', 'red', tvConnStatus);
-            
-        //if(iptvConnStatus == "Connected")
-         //   connStatus('iptvStatus', 'green', iptvConnStatus);
-        //else if( tvConnStatus == "Trying...")
-         //   connStatus('iptvStatus', 'black', iptvConnStatus);
-        //else
-          //  connStatus('iptvStatus', 'red', iptvConnStatus);
-    }
+
     ProcessNeighbourRoom(neighbourRoom);
 
     homePageInitialized = true;
 }
+
+let holding = false;
+
+function HoldTimer()
+{
+    holding = true;
+    let i = 0;
+    const holdingInterval = setInterval(() => {
+        if(i > 600)
+        {
+            if(holding)
+            {
+                openSubpage("HiddenSettings");
+            }
+            
+            holding = false;
+            clearInterval(holdingInterval);
+        }
+        else
+        {
+            if(holding)
+            {
+                //holding and timer not passed
+                i++
+            }
+            else
+            {
+                //stopped holding and timer not passed
+                holding = false;
+                clearInterval(holdingInterval);
+            }
+        }
+    }, 7);
+}
+
 
 function ConnectRoom()
 {
@@ -160,7 +186,7 @@ function AddSourcesToInterface()
     )
     {
         let sourceBtn = document.createElement("div");
-        sourceBtn.innerHTML = "Room Off"
+        sourceBtn.innerHTML = "ROOM OFF"
         sourceBtn.classList.add('source-btn', 'off-btn');
         sourceBtn.id = "roomOffBtn"
         btnsContainer.appendChild(sourceBtn);
@@ -223,9 +249,9 @@ function AddExtraText(sourceBtn)
 {
     let moreOptionsMessage = document.createElement("div");
     if(SourcesList[sourceSelected] == "TV")
-        moreOptionsMessage.innerHTML += "Press Again for Control";
+        moreOptionsMessage.innerHTML += "PRESS AGAIN FOR CONTROL";
     else
-        moreOptionsMessage.innerHTML += "No Extra Options";
+        moreOptionsMessage.innerHTML += "NO EXTRA OPTIONS";
 
     moreOptionsMessage.style.fontSize = "20px";
 
@@ -235,7 +261,7 @@ function AddExtraText(sourceBtn)
 function disableSourceSelection(sSelected)
 {
     let currentSourceName = document.getElementById(sSelected).firstChild.innerHTML;
-    document.getElementById(sSelected).firstChild.innerHTML = "System Initializing...";
+    document.getElementById(sSelected).firstChild.innerHTML = "SYSTEM INITIALIZING..";
 
     sourceSelectionDisabled = true;
     setTimeout(() => {
@@ -320,17 +346,13 @@ function ProcessNeighbourRoom(neighbourRoom)
         
         projectBottom.appendChild(settingsButton);
         document.getElementById("settingsButton").addEventListener('touchend', function(){
-            openSubpage("Settings");
+            if(!sourceSelectionDisabled)
+                openSubpage("Settings");
         })
         if(JoinedState)
         {
             
         }
-        //let nextRoomMessage = document.createElement("div")
-        //nextRoomMessage.innerHTML = swipeMessage;
-        //nextRoomMessage.style.fontSize = "24px"
-
-        //roomNameContainer.appendChild(nextRoomMessage);
 
         nextRoom = parseInt(neighbourRoom);
     }

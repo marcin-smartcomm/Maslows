@@ -165,11 +165,11 @@ namespace MaslowsMain
                     if (TPLocations.availableLocations.IndexOf(currentRoom.GetRoomName()) != -1)
                         TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf(currentRoom.GetRoomName())] = true;
 
-                    if (currentRoom.GetRoomName().Equals("Meeting Room 4.16"))
-                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 4.17")] = true;
+                    if (currentRoom.GetRoomName().Equals("Meeting Room 402"))
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 401")] = true;
 
-                    if (currentRoom.GetRoomName().Equals("Meeting Room 3.18"))
-                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 3.17")] = true;
+                    if (currentRoom.GetRoomName().Equals("Meeting Room 302"))
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 301")] = true;
                 }
             }
             else
@@ -182,11 +182,11 @@ namespace MaslowsMain
                     if (TPLocations.availableLocations.IndexOf(currentRoom.GetRoomName()) != -1)
                         TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf(currentRoom.GetRoomName())] = false;
 
-                    if (currentRoom.GetRoomName().Equals("Meeting Room 4.16"))
-                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 4.17")] = false;
+                    if (currentRoom.GetRoomName().Equals("Meeting Room 402"))
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 401")] = false;
 
-                    if (currentRoom.GetRoomName().Equals("Meeting Room 3.18"))
-                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 3.17")] = false;
+                    if (currentRoom.GetRoomName().Equals("Meeting Room 302"))
+                        TPLocations.availableLocationsIndex[TPLocations.availableLocations.IndexOf("Meeting Room 301")] = false;
 
                     Task.Run(() =>
                     {
@@ -267,6 +267,11 @@ namespace MaslowsMain
                 {
                     int btnNum = int.Parse(incomingRequest.Split(':')[1]);
                     currentRoom.SourceBtnPressed(btnNum);
+                }
+                else if (incomingRequest.Contains("SkyBtn"))
+                {
+                    int btnNum = int.Parse(incomingRequest.Split(':')[1]);
+                    currentRoom.SkyBtnPressed(btnNum);
                 }
                 else if (incomingRequest.Contains("ConnectEquipment")) currentRoom.ConnectRoomEquipment(tpID);
                 else if (incomingRequest.Contains("DisconnectEquipment")) currentRoom.DisconnectRoomEquipment(tpID);

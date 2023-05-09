@@ -1,3 +1,5 @@
+let prevColor = "";
+
 let btnCount = 31;
 function InitializeIPTVVariables()
 {
@@ -11,12 +13,12 @@ function InitializeIPTVVariables()
       sendMessage(`SourceBtn:${i}`);
     })
     document.getElementById(`btn${i}`).addEventListener('touchstart', function() {
+      prevColor = document.getElementById(`btn${i}`).style.backgroundColor;
       document.getElementById(`btn${i}`).classList.add("btn-pressed")
-      document.getElementById(`btn${i}`).classList.remove("btn-unpressed")
     })
     document.getElementById(`btn${i}`).addEventListener('touchend', function() {
       document.getElementById(`btn${i}`).classList.remove("btn-pressed")
-      document.getElementById(`btn${i}`).classList.add("btn-unpressed")
+      prevColor = document.getElementById(`btn${i}`).style.backgroundColor = prevColor;
     })
   }
 
@@ -25,47 +27,16 @@ function InitializeIPTVVariables()
     openSubpage("IPTVNumpad");
     InitializeIPTVNumpad();
   })
-
-//swipe read
-/*
-  document.getElementById("iptvSubpageSection").addEventListener('touchstart', e => {
-    IPTVtouchstartX = e.changedTouches[0].screenX
-  })
-  
-  document.getElementById("iptvSubpageSection").addEventListener('touchend', e => {
-    IPTVtouchendX = e.changedTouches[0].screenX
-  
-    IPTVcheckDirection()
-  })
-  */
 }
-
 
 function InitializeIPTVNumpad()
 {
-  document.getElementById("iptvReturn").addEventListener('click', function() {
-    openSubpage("Home");
-  })
-
-  for(let i = 9; i < 23; i ++)
+  for(let i = 9; i < 19; i ++)
   {
     document.getElementById(`btn${i}`).addEventListener('click', function() {
       sendMessage(`SourceBtn:${i}`);
     })
 
-    if(!document.getElementById(`btn${i}`).classList.contains("iptv-round-btn"))
-    {
-      document.getElementById(`btn${i}`).addEventListener('touchstart', function() {
-        document.getElementById(`btn${i}`).classList.add("btn-pressed")
-        document.getElementById(`btn${i}`).classList.remove("btn-unpressed")
-      })
-      document.getElementById(`btn${i}`).addEventListener('touchend', function() {
-        document.getElementById(`btn${i}`).classList.remove("btn-pressed")
-        document.getElementById(`btn${i}`).classList.add("btn-unpressed")
-      })
-    }
-    else
-    {
       document.getElementById(`btn${i}`).addEventListener('touchstart', function() {
         document.getElementById(`btn${i}`).classList.add("btn-pressed")
         document.getElementById(`btn${i}`).classList.remove("iptv-red")
@@ -84,43 +55,10 @@ function InitializeIPTVNumpad()
         if(i == 22)
           document.getElementById(`btn${i}`).classList.add("iptv-blue")
       })
-    }
   }
 
   document.getElementById("channelSelect").addEventListener('click', function()
   {
     openSubpage("TV");
   })
-
-//swipe read
-/*
-  document.getElementById("iptvSubpageSection").addEventListener('touchstart', e => {
-    IPTVtouchstartX = e.changedTouches[0].screenX
-  })
-  
-  document.getElementById("iptvSubpageSection").addEventListener('touchend', e => {
-    IPTVtouchendX = e.changedTouches[0].screenX
-  
-    IPTVcheckDirection()
-  })
-  */
 }
-
-//swipe read
-/*
-let IPTVtouchstartX = 0
-let IPTVtouchendX = 0
-    
-function IPTVcheckDirection() {
-  if (IPTVtouchendX < IPTVtouchstartX)
-  {
-    if(currentSubpage == "TV")
-    {
-      openSubpage("IPTVNumpad");
-      InitializeIPTVNumpad();
-    }
-    else
-      openSubpage("TV");
-  }
-}
-*/

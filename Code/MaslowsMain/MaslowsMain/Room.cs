@@ -176,6 +176,11 @@ namespace MaslowsMain
                 _cs.PushSky1Button(btnPressed);
             }
         }
+
+        public void SkyBtnPressed(int btnNum)
+        {
+            _cs.PushSky1Button(btnNum);
+        }
         public void VolUp()
         {
             lgtv.VolUp();

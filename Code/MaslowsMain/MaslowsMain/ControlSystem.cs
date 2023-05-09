@@ -294,7 +294,7 @@ namespace MaslowsMain
 
         public void SendMessage(string message)
         {
-            _SimplWindowsComms.StringInput[1].StringValue = message;
+            // _SimplWindowsComms.StringInput[1].StringValue = message;
         }
 
         void _ControllerEthernetEventHandler(EthernetEventArgs ethernetEventArgs)

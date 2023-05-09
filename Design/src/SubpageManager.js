@@ -98,4 +98,10 @@ function InitializeSubpageVariables(pageToInitialize)
   }
   if(pageToInitialize == "Settings")
     InitializeSettingsVariables();
+  if(pageToInitialize == "HiddenSettings")
+    InitializeHiddenSettingsVariables();
+  if(pageToInitialize == "Sky-Main")
+    InitializeSkyMainVariables();
+  if(pageToInitialize == "Sky-Numpad")
+    InitializeSkyNumpadVariables();
 }

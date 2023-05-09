@@ -27,7 +27,7 @@ function joinedStateChanged()
     let joinedInfoText;
     joinedInfoText = document.createElement("div")
     joinedInfoText.id = "joinedInfoText";
-    joinedInfoText.innerHTML = "<span id=\"joinedWithText\">Joined with:</span> " + neighbourRoomName;
+    joinedInfoText.innerHTML = "<span id=\"joinedWithText\">JOINED WITH:</span> " + neighbourRoomName;
   
     roomNameContainer.appendChild(joinedInfoText);
   }
