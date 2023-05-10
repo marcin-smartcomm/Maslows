@@ -7,7 +7,7 @@ function InitializeSettingsVariables()
             sendMessage("SeperateRooms")
     })
     document.getElementById("returnBtn").addEventListener('click', function(){
-        openSubpage("Home")
+        openSubpage("HiddenSettings")
     })
 
     document.getElementById("room1Box").innerHTML = CurrentRoomName;

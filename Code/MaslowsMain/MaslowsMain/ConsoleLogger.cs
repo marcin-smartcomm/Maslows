@@ -118,6 +118,17 @@ namespace MaslowsMain
                 }
                 catch(Exception e) { _cs.logger.WriteLine("Problem Calling WakeSystem Method: " + e.ToString()); }
             }
+            if(value.ToString().Contains("Mute"))
+            {
+                if(value.ToString().Split(':')[2].Equals("true"))
+                    _cs.rooms[int.Parse(value.ToString().Split(':')[1])].SetNewMuteState(true);
+                if (value.ToString().Split(':')[2].Equals("false"))
+                    _cs.rooms[int.Parse(value.ToString().Split(':')[1])].SetNewMuteState(false);
+            }
+            if (value.ToString().Contains("Volume"))
+            {
+                _cs.rooms[int.Parse(value.ToString().Split(':')[1])].SetNewVolLevel(int.Parse(value.ToString().Split(':')[2]));
+            }
         }
     }
 }

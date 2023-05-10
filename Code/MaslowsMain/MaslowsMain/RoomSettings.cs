@@ -15,6 +15,7 @@ namespace MaslowsMain
         public bool joined { get; set; }
         public bool MasterPanel { get; set; }
         public bool slave { get; set; }
+        public bool muteState { get; set; }
         public int volume { get; set; }
     }
 }

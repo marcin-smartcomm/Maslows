@@ -64,6 +64,14 @@ function showFooter(visibilityState)
   }
 }
 
+function showTop(visState)
+{
+  if(visState)
+    document.getElementById("roomNameContainer").style.display = "flex"
+  else
+    document.getElementById("roomNameContainer").style.display = "none"
+}
+
 function ClearTransition()
 {
   document.getElementById("subpageSection").classList.remove("transitionIn");
@@ -78,11 +86,15 @@ function InitializeSubpageVariables(pageToInitialize)
   {
     InitializeScreenSaverVariables();
     showFooter(false);
+    showTop(false);
   }
   if(pageToInitialize == "Home")
   {
     showFooter(true);
     InitializeHomeVariables();
+    
+    if(previousSubpage == "ScreenSaver")
+    showTop(true);
   }
   if(pageToInitialize == "SlavePanel")
   {

@@ -7,5 +7,6 @@
   "sourceSelected": -1,
   "neighbourRoom": -1,
   "joined": false,
-  "volume": 50
+  "volume": 50,
+  "muteState": false
 }

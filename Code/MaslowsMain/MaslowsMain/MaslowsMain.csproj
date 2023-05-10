@@ -143,6 +143,7 @@
     <Compile Include="ConsoleLogger.cs" />
     <Compile Include="ControlSystem.cs" />
     <Compile Include="FileOperations.cs" />
+    <Compile Include="IPadController.cs" />
     <Compile Include="IPTV.cs" />
     <Compile Include="LGTV.cs" />
     <Compile Include="MasterIpad.cs" />

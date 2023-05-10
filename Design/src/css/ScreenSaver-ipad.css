@@ -1,0 +1,56 @@
+.ScreenSaverMainSection
+{
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+}
+
+.logoImgContainer
+{
+  width: 100%;
+  height: 100%;
+}
+
+.icon-text-ss
+{
+  font-size: 48px;
+  text-align: center;
+  color: var(--text-color-main);
+  width: 100%;
+  height: 100%;
+}
+
+.blurred
+{
+  animation: blurEffect 0.2s forwards;
+}
+
+.disappear
+{
+  animation: disappear 0.2s forwards;
+}
+
+@keyframes blurEffect
+{
+  from
+  {
+    filter: blur(0px);
+  }
+  to
+  {
+    filter: blur(10px);
+  }
+}
+
+@keyframes disappear
+{
+  from
+  {
+    opacity: 0%;
+  }
+  to
+  {
+    opacity: 100%;
+  }
+}

@@ -6,10 +6,10 @@ let SourceBtns = []
 let sourceSelected = 0;
 let previousSourceSelected = 0;
 let sourceSelectionDisabled = false;
-let nextRoom = 0;
 
 let volLabel;
 let volLevel = 0;
+let muteState = false;
 
 let homePageInitialized = false;
 
@@ -91,14 +91,21 @@ function InitializeHomeVariables()
         document.getElementById("volDownBtn").classList.remove("vol-btn-pressed")
         sendMessage("Volume:-");
     })
+
+    document.getElementById("muteBtn").addEventListener('touchstart', function()
+    {
+        sendMessage("Volume:Mute");
+    })
+
     volLabel = document.getElementById("volLabel");
     volLabel.innerHTML = volLevel + "%";
+    UpdateMuteStateUI();
 
     if(previousSubpage == "ScreenSaver") {
         ConnectRoom();
     }
 
-    ProcessNeighbourRoom(neighbourRoom);
+    //ProcessNeighbourRoom(neighbourRoom);
 
     homePageInitialized = true;
 }
@@ -114,7 +121,8 @@ function HoldTimer()
         {
             if(holding)
             {
-                openSubpage("HiddenSettings");
+                if(!sourceSelectionDisabled)
+                    openSubpage("HiddenSettings");
             }
             
             holding = false;
@@ -130,7 +138,6 @@ function HoldTimer()
             else
             {
                 //stopped holding and timer not passed
-                holding = false;
                 clearInterval(holdingInterval);
             }
         }
@@ -155,6 +162,27 @@ function UpdateVolumeLevel(level)
     volLevel = level;
     if(currentSubpage != "ScreenSaver")
         volLabel.innerHTML = level + "%";
+}
+
+function UpdateMuteState(newState)
+{
+    muteState = newState;
+    if(currentSubpage != "ScreenSaver")
+        UpdateMuteStateUI();
+}
+
+function UpdateMuteStateUI()
+{
+    if(muteState == "True")
+    {
+        document.getElementById("muteBtn").classList.remove('unmuted')
+        document.getElementById("muteBtn").classList.add('muted')
+    }
+    else
+    {
+        document.getElementById("muteBtn").classList.remove('muted')
+        document.getElementById("muteBtn").classList.add('unmuted')
+    }
 }
 
 function AddSourcesToInterface()
@@ -253,7 +281,7 @@ function AddExtraText(sourceBtn)
     else
         moreOptionsMessage.innerHTML += "NO EXTRA OPTIONS";
 
-    moreOptionsMessage.style.fontSize = "20px";
+    moreOptionsMessage.classList.add('more-options-message-label')
 
     sourceBtn.appendChild(moreOptionsMessage);
 }
@@ -349,12 +377,6 @@ function ProcessNeighbourRoom(neighbourRoom)
             if(!sourceSelectionDisabled)
                 openSubpage("Settings");
         })
-        if(JoinedState)
-        {
-            
-        }
-
-        nextRoom = parseInt(neighbourRoom);
     }
     else
     {

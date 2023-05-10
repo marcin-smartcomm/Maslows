@@ -12,7 +12,9 @@ namespace MaslowsMain
 {
     public class ControlSystem : CrestronControlSystem
     {
-        CrestronGo masterIPad;
+        MasterIpad masteriPadController;
+        IPadController iPadController;
+        CrestronGo masterIPad, diningIPad;
         
         public List<Room> rooms;
         public ConsoleLogger logger;
@@ -166,6 +168,10 @@ namespace MaslowsMain
             const ushort TOUCHPANNEL_START_PORT = 50000;
 
             masterIPad = new CrestronGo(0x10, this);
+            masteriPadController = new MasterIpad(masterIPad, rooms, this, 1);
+
+            diningIPad = new CrestronGo(0x11, this);
+            iPadController = new IPadController(diningIPad, rooms[10], this);
 
             tpDecider = new Touchpannel(50000, rooms[0], this);
 
@@ -276,9 +282,14 @@ namespace MaslowsMain
                     }
                     else
                     {
-                        logger.WriteLine("Signal coming on join: " + args.Sig.Number);
+                        logger.WriteLine("Vol level coming on join: " + args.Sig.Number);
                         TVs[args.Sig.Number - 10].VolumeChanged(int.Parse(_SimplWindowsComms.StringOutput[args.Sig.Number].StringValue));
                     }
+                    break;
+
+                case eSigType.Bool:
+                    logger.WriteLine("Bool signal change on join: " + args.Sig.Number);
+                    TVs[args.Sig.Number - 10].MuteStateChanged(_SimplWindowsComms.BooleanOutput[args.Sig.Number].BoolValue);
                     break;
             }
         }
@@ -294,7 +305,7 @@ namespace MaslowsMain
 
         public void SendMessage(string message)
         {
-            // _SimplWindowsComms.StringInput[1].StringValue = message;
+            _SimplWindowsComms.StringInput[1].StringValue = message;
         }
 
         void _ControllerEthernetEventHandler(EthernetEventArgs ethernetEventArgs)

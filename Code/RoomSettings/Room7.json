@@ -9,5 +9,6 @@
   "joined": false,
   "MasterPanel": false,
   "slave": false,
-  "volume": 50
+  "volume": 50,
+  "muteState": false
 }

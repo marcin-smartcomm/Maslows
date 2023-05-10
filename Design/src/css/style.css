@@ -37,14 +37,14 @@
   font-family: "MaslowFont";
   color: var(--text-color-main);
   background-color: var(--main-color);
-  height: 80px;
+  height: 12vh;
   border-bottom: 1px solid black;
 }
 
 .project-body-container
 {
-  width: 540;
-  height: 480px;
+  width: 100vw;
+  height: 76vh;
 }
 
 .project-body
@@ -66,7 +66,8 @@ footer
   justify-content: center;
   background-color: var(--main-color);
   border-top: 1px solid black;
-  height: 80px;
+  height: 12vh;
+  width: 100%;
   font-family: "MaslowFont";
 }
 
@@ -75,7 +76,7 @@ footer
   display: flex;
   align-items: center;
   justify-content:center;
-  width: 80%;
+  width: 100%;
   height: 100%;
 }
 
@@ -104,6 +105,18 @@ footer
   font-size: 20px;
   border: 1px solid black;
   background-color: var(--secondary-color);
+}
+
+.muted
+{
+  background-color: black;
+  color: white;
+}
+
+.unmuted
+{
+  background-color: var(--secondary-color);
+  color: var(--text-color-main);
 }
 
 /*
@@ -146,9 +159,14 @@ footer
 
 .source-btn
 {
-  width: 300px;
-  height: 60px;
-  font-size: 32px;
+  width: 80vw;
+  height: 10vh;
+  font-size: 2rem;
+}
+
+.more-options-message-label
+{
+  font-size: 20px;
 }
 
 .grey-btn
@@ -159,7 +177,7 @@ footer
 
 .grey-btn:active
 {
-  font-size: 30px;
+  font-size: 2rem;
 }
 
 .grey-btn-active
@@ -190,7 +208,7 @@ footer
 
 .off-btn:active
 {
-  font-size: 30px;
+  font-size: 2rem;
 }
 
 .off-btn-active
@@ -234,15 +252,15 @@ footer
 {
   0% 
   {
-    height: 60px;
+    height: 10vh;
     background-color: #FFFEFB;
-    font-size: 20px;
+    font-size: 1rem;
   }
   100% 
   {
-    height: 100px;
+    height: 18vh;
     background-color: #748F74;
-    font-size: 36px;
+    font-size: 2rem;
   }
 }
 
@@ -251,11 +269,10 @@ footer
   from 
   {
     background-color: #748F74;
-    height: 100px;
   }
   to 
   {
-    height: 60px;
+    height: 10vh;
     background-color: #FFFEFB;
   }
 }

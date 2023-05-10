@@ -8,11 +8,14 @@
 
 .logoImgContainer
 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
   height: 100%;
+}
+
+.logoImgContainer img
+{
+  position: fixed;
+  margin-top: -80px;
 }
 
 .icon-text-ss

@@ -17,6 +17,7 @@ namespace MaslowsMain
         public event Action<short> SourceSelectedEvent;
         public event Action<bool> RoomTVConnectedEvent;
         public event Action<int> RoomVolChangedEvent;
+        public event Action<bool> RoomMuteStateChangedEvent;
         public event Action<bool> RoomsJoinedEvent;
         public event Action<bool> SlaveModeEvent;
 
@@ -30,6 +31,7 @@ namespace MaslowsMain
             this.lgtv = lgtv;
             lgtv.TVConnectedEvent += Lgtv_TVConnectedEvent;
             lgtv.VolChangeEvent += Lgtv_VolChangeEvent;
+            lgtv.MuteStateChangedEvent += Lgtv_MuteStateChangedEvent;
             lgtv.TVSelectedEvent += Lgtv_TVSelectedEvent;
 
             try
@@ -48,6 +50,11 @@ namespace MaslowsMain
             }
         }
 
+        private void Lgtv_MuteStateChangedEvent(bool newMuteState)
+        {
+            SetNewMuteState(newMuteState);
+        }
+
         private void Lgtv_TVSelectedEvent(bool obj)
         {
             Task.Run(() =>
@@ -61,20 +68,7 @@ namespace MaslowsMain
 
         void Lgtv_VolChangeEvent(int volLevel)
         {
-            try
-            {
-                _settings.volume = volLevel;
-                FileOperations.UpdateSettings(_roomID.ToString(), _settings);
-            }
-            catch(Exception ex)
-            {
-                _cs.logger.WriteLine("Problem in Room.Lgtv_VolChangeEvent(): " + ex);
-            }
-
-            if (this.RoomVolChangedEvent != null)
-            {
-                this.RoomVolChangedEvent(volLevel);
-            }
+            SetNewVolLevel(volLevel);
         }
         void Lgtv_TVConnectedEvent(bool connStatus)
         {
@@ -116,10 +110,47 @@ namespace MaslowsMain
         public string[] GetSources() => _settings.sources;
         public short GetSourceSelected() => _settings.sourceSelected;
         public short GetNeighbourRoom() => _settings.neighbourRoom;
-        public int GetRoomVolLevel() => lgtv.GetVolumeLevel();
+        public int GetRoomVolLevel() => _settings.volume;
+        public bool GetMuteState() => _settings.muteState;
         public bool GetJoinedState() => _settings.joined;
         public bool GetMasterPanel() => _settings.MasterPanel;
         public bool GetSlavePanel() => _settings.slave;
+
+        public void SetNewMuteState(bool newMuteState)
+        {
+            try
+            {
+                _settings.muteState = newMuteState;
+                FileOperations.UpdateSettings(_roomID.ToString(), _settings);
+            }
+            catch (Exception ex)
+            {
+                _cs.logger.WriteLine("Problem in Room.Lgtv_MuteStateChangedEvent(): " + ex);
+            }
+
+            if (RoomMuteStateChangedEvent != null)
+            {
+                RoomMuteStateChangedEvent(newMuteState);
+            }
+        }
+
+        public void SetNewVolLevel(int volLevel)
+        {
+            try
+            {
+                _settings.volume = volLevel;
+                FileOperations.UpdateSettings(_roomID.ToString(), _settings);
+            }
+            catch (Exception ex)
+            {
+                _cs.logger.WriteLine("Problem in Room.Lgtv_VolChangeEvent(): " + ex);
+            }
+
+            if (this.RoomVolChangedEvent != null)
+            {
+                this.RoomVolChangedEvent(volLevel);
+            }
+        }
 
         public void SetSourceSelected(short value)
         {
@@ -183,15 +214,25 @@ namespace MaslowsMain
         }
         public void VolUp()
         {
+            _cs.logger.WriteLine(GetRoomName() + ": Vol+");
             lgtv.VolUp();
             if (!_settings.slave && _settings.joined)
                 _cs.rooms[_settings.neighbourRoom].VolUp();
         }
         public void VolDown()
         {
+            _cs.logger.WriteLine(GetRoomName() + ": Vol-");
             lgtv.VolDown();
             if (!_settings.slave && _settings.joined)
                 _cs.rooms[_settings.neighbourRoom].VolDown();
+        }
+
+        public void Mute()
+        {
+            _cs.logger.WriteLine(GetRoomName() + ": Mute");
+            lgtv.Mute();
+            if (!_settings.slave && _settings.joined)
+                _cs.rooms[_settings.neighbourRoom].Mute();
         }
 
         public void JoinRooms()

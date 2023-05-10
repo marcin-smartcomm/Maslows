@@ -68,6 +68,7 @@ function RequestRoomData()
     sendMessage("GetSourceSelected");
     sendMessage("GetNeighbourRoom");
     sendMessage("GetVolumeLevel");
+    sendMessage("GetMuteState");
     sendMessage("GetJoinedState");
     sendMessage("MasterPanel");
     sendMessage("SlavePanel");
@@ -120,7 +121,7 @@ function pong() {
 }
 
 let CurrentRoomName = "";
-let neighbourRoom = "";
+let neighbourRoom = -1;
 let neighbourRoomName = "";
 let JoinedState = false;
 let MasterPanel = false;
@@ -235,6 +236,13 @@ function onMessage(e) {
 
         //in Home.js
         UpdateVolumeLevel(temp);
+    }
+    else if(value.includes("MuteState"))
+    {
+        let temp = value.replace('MuteState ', '');
+
+        //in Home.js
+        UpdateMuteState(temp);
     }
 
     else if (value.includes("AvailableLocations"))

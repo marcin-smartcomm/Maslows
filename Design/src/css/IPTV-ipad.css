@@ -1,0 +1,196 @@
+.iptv-centered
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iptv-subpage-section
+{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.iptv-section0
+{
+  width: 100%;
+  height: 17%;
+}
+
+.iptv-section1
+{
+  width: 90%;
+  height: 75%;
+}
+
+.iptv-section1a
+{
+  width: 70%;
+  height: 65%;
+}
+
+.iptv-section2
+{
+  width: 30%;
+  height: 65%;
+}
+
+.iptv-section3
+{
+  width: 100%;
+  height: 20%;
+}
+
+.iptv-directional-pad-container
+{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+  height: 90%;
+}
+
+.iptv-btn-row
+{
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 30%;
+}
+
+.iptv-btn-row2
+{
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 20%;
+}
+
+.iptv-directional-btn
+{
+  width: 30%;
+  height: 100%;
+  border: 1px solid black;
+  background-color: #DCE3DC;
+  font-size: 2rem;
+}
+
+.iptv-directional-center-btn
+{
+  background-color: #748F74;
+}
+
+.iptv-ch-btns-container
+{
+  display: flex;
+  flex-wrap: wrap;
+  align-items:center;
+  justify-content: space-evenly;
+  width: 90%;
+  height: 90%;
+}
+
+.iptv-ch-btn
+{
+  width: 70%;
+  height: 40%;
+  border: 1px solid black;
+  background-color: #D7DEE1;
+  font-size: 2rem;
+}
+
+.iptv-func-btns-container
+{
+  display: flex;
+  flex-wrap: wrap;
+  align-items:center;
+  justify-content: space-around;
+  width: 100%;
+  height: 90%;
+}
+
+.iptv-func-btn
+{
+  width: 47%;
+  height: 65%;
+  border: 1px solid black;
+  background-color: var(--secondary-color);
+}
+
+.iptv-top-btns-container
+{
+  display: flex;
+  align-items:center;
+  justify-content: space-around;
+  width: 100%;
+  height: 90%;
+}
+
+.iptv-return-btn
+{
+  text-align: center;
+  width: 47%;
+  height: 80%;
+  font-size: 2rem;
+  border: 1px solid black;
+  background-color: var(--secondary-color);
+}
+
+.iptv-label
+{
+  color: black;
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.iptv-numpad-btn
+{
+  width: 30%;
+  height: 100%;
+  font-size: 2.5rem;
+  border: 1px solid black;
+  background-color: var(--secondary-color);
+}
+
+.iptv-round-btn
+{
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+.iptv-red
+{
+  background-color: rgba(255, 0, 0, 0.8);
+}
+
+.iptv-green
+{
+  background-color: rgba(0, 255, 0, 0.8);
+}
+
+.iptv-yellow
+{
+  background-color: rgba(251, 255, 0, 0.8);
+}
+
+.iptv-blue
+{
+  background-color: rgba(0, 0, 255, 0.8);
+}
+
+.btn-pressed
+{
+  color: white;
+  background-color: black
+}
+
+.btn-unpressed
+{
+  background-color: var(--secondary-color);
+}

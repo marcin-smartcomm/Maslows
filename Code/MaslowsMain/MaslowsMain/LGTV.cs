@@ -20,6 +20,7 @@ namespace MaslowsMain
 
         public event Action<bool> TVConnectedEvent;
         public event Action<int> VolChangeEvent;
+        public event Action<bool> MuteStateChangedEvent;
         public event Action<bool> TVSelectedEvent;
 
         public LGTV(ControlSystem cs, string name, string ipAddr, int port, byte[] macAddr)
@@ -51,19 +52,25 @@ namespace MaslowsMain
         }
         void OnDeviceConnected(bool connStatus)
         {
-            if (this.TVConnectedEvent != null)
-                this.TVConnectedEvent(connStatus);
+            if (TVConnectedEvent != null)
+                TVConnectedEvent(connStatus);
         }
         void OnVolumeChange(int volLevel)
         {
-            if (this.VolChangeEvent != null)
-                this.VolChangeEvent(volLevel);
+            if (VolChangeEvent != null)
+                VolChangeEvent(volLevel);
+        }
+
+        void OnMuteStateChagne(bool newState)
+        {
+            if (MuteStateChangedEvent != null)
+                MuteStateChangedEvent(newState);
         }
 
         void OnTVSelectedEvent(bool state)
         {
-            if (this.TVSelectedEvent != null)
-                this.TVSelectedEvent(state);
+            if (TVSelectedEvent != null)
+                TVSelectedEvent(state);
         }
 
         public int GetVolumeLevel() => volLevel;
@@ -82,6 +89,11 @@ namespace MaslowsMain
         public void VolDown()
         {
             _cs.SendMessage(TVName + ":VolDown");
+        }
+
+        public void Mute()
+        {
+            _cs.SendMessage(TVName + ":Mute");
         }
 
         int HDMISelect(int hdmiInput)
@@ -133,7 +145,7 @@ namespace MaslowsMain
                 _cs.SendMessage(TVName + ":HDMI1");
                 OnTVSelectedEvent(true);
             }
-            else if (source.Equals("Laptop") || source.Equals("Wireless") || source.Equals("Collaborate"))
+            else if (source.Equals("Laptop") || source.Equals("Wireless") || source.Equals("COLLABORATE"))
             {
                 _cs.SendMessage(TVName + ":Laptop");
             }
@@ -154,6 +166,11 @@ namespace MaslowsMain
         public void VolumeChanged(int volLevel)
         {
             OnVolumeChange(volLevel);
+        }
+
+        public void MuteStateChanged(bool newState)
+        {
+            OnMuteStateChagne(newState);
         }
 
         void evaluateResponse(string textToProcess)
