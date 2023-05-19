@@ -24,7 +24,7 @@ namespace MaslowsMain
             _room = room;
             _iPad = iPad;
 
-            _iPad.ParameterProjectName.Value = "iPad-Maslows-Room";
+            _iPad.ParameterProjectName.Value = "iPad-Maslows-Room-v3";
             _iPad.SigChange += _iPad_SigChange;
             _iPad.OnlineStatusChange += _iPad_OnlineStatusChange; ;
             if (_iPad.Register() != eDeviceRegistrationUnRegistrationResponse.Success)

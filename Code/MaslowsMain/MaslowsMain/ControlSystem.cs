@@ -56,10 +56,10 @@ namespace MaslowsMain
         {
             try
             {
-                for (int i = 0; i < tp.Length; i++)
-                    tp[i].OnFireAlarmStateChange(state);
+                //for (int i = 0; i < tp.Length; i++)
+                //    tp[i].OnFireAlarmStateChange(state);
 
-                logger.WriteLine("Informed TPs of fire alarm state");
+                //logger.WriteLine("Informed TPs of fire alarm state");
 
                 if(state)
                 {

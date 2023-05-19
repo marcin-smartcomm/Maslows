@@ -1,0 +1,21 @@
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+#symbol_name "Day Of Week"            
+
+digital_input Check;
+digital_output weekday, weekend;
+
+push Check
+{
+	if(day() = "Saturday" || day() = "Sunday")
+	{
+     	weekday = 0;
+		weekend = 1;
+	} 	
+	else
+	{
+     	weekday = 1;
+		weekend = 0;
+	}
+}

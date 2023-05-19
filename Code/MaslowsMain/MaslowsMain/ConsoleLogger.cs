@@ -129,6 +129,11 @@ namespace MaslowsMain
             {
                 _cs.rooms[int.Parse(value.ToString().Split(':')[1])].SetNewVolLevel(int.Parse(value.ToString().Split(':')[2]));
             }
+            if (value.ToString().Contains("IPTV"))
+            {
+                int iptvIndex = int.Parse(value.ToString().Split(':')[1]);
+                _cs.iptvs[iptvIndex].SendHTTPRequest(value.ToString().Split(':')[2]);
+            }
         }
     }
 }
