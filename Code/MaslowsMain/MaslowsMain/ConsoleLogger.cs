@@ -56,7 +56,7 @@ namespace MaslowsMain
             else
             {
                 _backlog.Add(text);
-                if(_backlog.Count == 101)
+                if(_backlog.Count > 100)
                     _backlog.Clear();
             }
         }
