@@ -79,14 +79,20 @@ namespace MaslowsMain
         }
         void OnSourceSelected()
         {
-            if (_settings.sourceSelected != -1)
-                lgtv.SourceSelectedChanged(_settings.sources[_settings.sourceSelected]);
-            else
-                lgtv.SourceSelectedChanged("Off");
-
-            if (this.SourceSelectedEvent != null)
+            try
             {
-                this.SourceSelectedEvent(GetSourceSelected());
+                if (_settings.sourceSelected != -1)
+                    lgtv.SourceSelectedChanged(_settings.sources[_settings.sourceSelected]);
+                else
+                    lgtv.SourceSelectedChanged("Off");
+
+                if (this.SourceSelectedEvent != null)
+                {
+                    this.SourceSelectedEvent(GetSourceSelected());
+                }
+            }catch(Exception ex)
+            {
+                _cs.logger.WriteLine("Problem in Room" + _roomID + " OnSourceSelected " + ex);
             }
         }
 

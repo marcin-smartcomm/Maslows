@@ -255,7 +255,10 @@ namespace MaslowsMain
                     if (_SimplWindowsComms.Register() != eDeviceRegistrationUnRegistrationResponse.Success)
                         logger.WriteLine("Failed To Register Comms with Simpl Windows");
                     else
+                    {
+                        logger.WriteLine("_Simpl windows comms registered");
                         _SimplWindowsComms.SigChange += _SimplWindowsComms_SigChange;
+                    }
                 }
                 catch (Exception ex)
                 {

@@ -2,7 +2,8 @@
   "roomName": "MEETING ROOM 204",
   "sources": [
     "COLLABORATE",
-    "TV"
+    "TV",
+    "MERSIVE"
   ],
   "sourceSelected": -1,
   "neighbourRoom": -1,

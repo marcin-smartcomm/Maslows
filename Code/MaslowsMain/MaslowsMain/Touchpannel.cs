@@ -157,8 +157,9 @@ namespace MaslowsMain
         }
         void SendNeihbourRoom()
         {
-            CommsServer.SetIndirectTextSignal(1, "NeighbourRoom " + currentRoom.GetNeighbourRoom() + ":" + 
-                controlSystem.rooms[currentRoom.GetNeighbourRoom()].GetRoomName());
+            if(currentRoom.GetNeighbourRoom() != -1)
+                CommsServer.SetIndirectTextSignal(1, "NeighbourRoom " + currentRoom.GetNeighbourRoom() + ":" + 
+                    controlSystem.rooms[currentRoom.GetNeighbourRoom()].GetRoomName());
         }
 
         void OnClientConnected(ushort state)

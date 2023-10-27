@@ -115,51 +115,74 @@ namespace MaslowsMain
 
         public void SourceSelectedChanged(string source)
         {
-            if(!source.Equals("Off"))
+            try
             {
-                Task.Run(() =>
-                {
-                    Thread.Sleep(1000);
-                    PowerOn();
-                });
-            }
-            _cs.logger.WriteLine(TVName + ": Changing source to " + source);
-
-            bool wasOff = false;
-
-            if (source.Equals("Off"))
-            {
-                PowerOff();
-                currentSource = source;
-            }
-
-            if (currentSource.Equals("Off") && !source.Equals("Off"))
-            {
-                wasOff = true;
-                currentSource = source;
-                PowerOn();
-            }
-
-            if(source.Equals("IPTV") || source.Equals("TV"))
-            {
-                _cs.SendMessage(TVName + ":HDMI1");
-                OnTVSelectedEvent(true);
-            }
-            else if (source.Equals("Laptop") || source.Equals("Wireless") || source.Equals("COLLABORATE"))
-            {
-                _cs.SendMessage(TVName + ":Laptop");
-            }
-            else if (source.Equals("Sky"))
-            {
-                if (!wasOff)
-                    HDMISelect(1);
-                else
+                if (!source.Equals("Off"))
                 {
                     Task.Run(() =>
                     {
-                        HDMISelect(Delay(1, 2000));
+                        Thread.Sleep(1000);
+                        PowerOn();
                     });
                 }
+                _cs.logger.WriteLine(TVName + ": Changing source to " + source);
+
+                bool wasOff = false;
+
+                if (source.Equals("Off"))
+                {
+                    PowerOff();
+                    currentSource = source;
+                }
+
+                if (currentSource.Equals("Off") && !source.Equals("Off"))
+                {
+                    wasOff = true;
+                    currentSource = source;
+                    PowerOn();
+                }
+
+                if (source.Equals("IPTV") || source.Equals("TV"))
+                {
+                    try
+                    {
+                        _cs.SendMessage(TVName + ":HDMI1");
+                    }catch(Exception e)
+                    {
+                        _cs.logger.WriteLine("Exception in LGTV.SourceSelectedChanged().SendMessage: " + e);
+                    }
+                    OnTVSelectedEvent(true);
+                }
+                else if (source.Equals("Laptop") || source.Equals("Wireless") || source.Equals("COLLABORATE"))
+                {
+                    _cs.SendMessage(TVName + ":Laptop");
+                }
+                else if (source.Equals("Sky"))
+                {
+                    if (!wasOff)
+                        HDMISelect(1);
+                    else
+                    {
+                        Task.Run(() =>
+                        {
+                            HDMISelect(Delay(1, 2000));
+                        });
+                    }
+                }
+                else if (source.Equals("MERSIVE"))
+                {
+                    try
+                    {
+                        _cs.SendMessage(TVName + ":HDMI3");
+                    }
+                    catch (Exception e)
+                    {
+                        _cs.logger.WriteLine("Exception in LGTV.SourceSelectedChanged().SendMessage: " + e);
+                    }
+                }
+            }catch(Exception ex)
+            {
+                _cs.logger.WriteLine("Exception in LGTV.SourceSelectedChanged(): " + ex);
             }
         }
 
