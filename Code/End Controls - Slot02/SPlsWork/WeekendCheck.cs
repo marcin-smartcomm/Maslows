@@ -56,8 +56,6 @@ namespace UserModule_WEEKENDCHECK
     
     public override void LogosSplusInitialize()
     {
-        SocketInfo __socketinfo__ = new SocketInfo( 1, this );
-        InitialParametersClass.ResolveHostName = __socketinfo__.ResolveHostName;
         _SplusNVRAM = new SplusNVRAM( this );
         
         CHECK = new Crestron.Logos.SplusObjects.DigitalInput( CHECK__DigitalInput__, this );
