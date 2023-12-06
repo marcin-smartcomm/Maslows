@@ -1,0 +1,12 @@
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+#symbol_name "analog to serial"
+
+analog_input ain#;
+string_output sout$;
+
+change ain#
+{
+ 	sout$ = itoa(ain#);
+}
